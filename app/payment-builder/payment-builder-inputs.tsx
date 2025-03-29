@@ -16,10 +16,17 @@ const PaymentBuilderInputs = () => {
     price: 0,
     reservation: 0,
     signature: 0,
+    duringConstruction: 0,
+    duringConstructionPercent: 40,
     reservationSignatuerPercent: 10,
-    deliveryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)), // Two years from now
+    atDelivery: 0,
+    atDeliveryPercent: 50,
+    deliveryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)),
     reservationDate: new Date(),
-    signatureDate: new Date(new Date().setMonth(new Date().getMonth() + 1)), // One month from now
+    signatureDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+    firstPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 2)),
+    lastPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+    frequency: "trimestral",
   });
 
   console.log(formInputs);
@@ -43,9 +50,9 @@ const PaymentBuilderInputs = () => {
         }}
       />
 
-      <Separator className="my-4" />
+      <Separator className="my-7" />
 
-      <div className="grid gap-2 grid-cols-[1fr_2fr]">
+      <div className="grid gap-2 grid-cols-[1fr_2fr] mb-4">
         <div className="space-y-2 col-span-1">
           <Label htmlFor="moneda">Moneda</Label>
           <Select defaultValue="USD" onValueChange={(value) => setFormInputs({ ...formInputs, currency: value })}>
@@ -89,12 +96,12 @@ const PaymentBuilderInputs = () => {
         />
       </div>
 
-      <div className="mb-2">
+      <div className="md:grid gap-2 md:grid-cols-[2fr_1fr] mb-4">
         <div className="mb-2 grid gap-2 grid-cols-[1fr_1fr]">
           <CustomNumberInput 
             label="Reserva" 
             id="reservation" 
-            value={formInputs.price.toFixed(2)}
+            value={formInputs.reservation.toFixed(2)}
             onChange={(value) => setFormInputs({ ...formInputs, reservation: parseFloat(value) || 0 })}
             allowDecimals={true}
             decimalPlaces={2}
@@ -116,7 +123,82 @@ const PaymentBuilderInputs = () => {
             allowDecimals={true}
             decimalPlaces={2}
           />
-      </div>   
+      </div>
+
+      <div className="grid gap-2 grid-cols-[1fr_1fr]">
+        <DatePicker 
+          label="Primera cuota"
+          value={formInputs.firstPaymentDate}
+          onChange={(date) => {
+            if (date instanceof Date) {
+              setFormInputs({ ...formInputs, firstPaymentDate: date });
+            }
+          }}
+        />
+        <DatePicker 
+          label="Última cuota"
+          value={formInputs.lastPaymentDate}
+          onChange={(date) => {
+            if (date instanceof Date) {
+              setFormInputs({ ...formInputs, lastPaymentDate: date });
+            }
+          }}
+        />
+      </div>
+
+      <div className="mb-2 grid gap-2 grid-cols-[2fr_1fr]">
+          <CustomNumberInput 
+            label="En cuotas" 
+            id="during-construction" 
+            value={formInputs.duringConstruction.toFixed(2)}
+            onChange={(value) => setFormInputs({ ...formInputs, duringConstruction: parseFloat(value) || 0 })}
+            allowDecimals={true}
+            decimalPlaces={2}
+          />
+          <CustomNumberInput 
+            label="% en cuotas" 
+            id="during-construction-percentage" 
+            value={formInputs.duringConstructionPercent.toFixed(2)} 
+            onChange={(value) => setFormInputs({ ...formInputs, duringConstructionPercent: parseFloat(value) || 0 })}
+            allowDecimals={true}
+            decimalPlaces={2}
+          />
+        </div>
+
+        <div className="mb-4">
+          <Label className="block mb-2">Frecuencia de los pagos</Label>
+          <Select defaultValue="trimestral" onValueChange={(value) => setFormInputs({ ...formInputs, frequency: value })}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Seleccionar frecuencia" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="mensual">Mensual</SelectItem>
+              <SelectItem value="bimestral">Bimestral</SelectItem>
+              <SelectItem value="trimestral">Trimestral</SelectItem>
+              <SelectItem value="cuatrimestral">Cuatrimestral</SelectItem>
+              <SelectItem value="semestral">Semestral</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="mb-2 grid gap-2 grid-cols-[2fr_1fr]">
+          <CustomNumberInput 
+            label="Contra entrega" 
+            id="at-delivery" 
+            value={formInputs.atDelivery.toFixed(2)}
+            onChange={(value) => setFormInputs({ ...formInputs, atDelivery: parseFloat(value) || 0 })}
+            allowDecimals={true}
+            decimalPlaces={2}
+          />
+          <CustomNumberInput 
+            label="% contra entrega" 
+            id="during-construction-percentage" 
+            value={formInputs.atDeliveryPercent.toFixed(2)} 
+            onChange={(value) => setFormInputs({ ...formInputs, atDeliveryPercent: parseFloat(value) || 0 })}
+            allowDecimals={true}
+            decimalPlaces={2}
+          />
+        </div>
     </div>
   )
 };
