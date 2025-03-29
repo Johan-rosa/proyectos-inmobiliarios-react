@@ -5,6 +5,7 @@ import DatePicker from "@/components/date-picker";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CustomNumberInput from "@/components/custom-number-input";
 
 const PaymentBuilderInputs = () => {
   const [formInputs, setFormInputs] = useState({
@@ -34,11 +35,11 @@ const PaymentBuilderInputs = () => {
         }}
       />
       <Separator className="my-4" />
-      <div>
+      <div className="grid gap-2 grid-cols-[1fr_2fr]">
         <div className="space-y-2 col-span-1">
           <Label htmlFor="moneda">Moneda</Label>
           <Select defaultValue="USD" onValueChange={(value) => setFormInputs({ ...formInputs, currency: value })}>
-            <SelectTrigger id="moneda" className="w-24">
+            <SelectTrigger id="moneda" className="w-full">
               <SelectValue placeholder="Moneda" />
             </SelectTrigger>
             <SelectContent>
@@ -47,6 +48,7 @@ const PaymentBuilderInputs = () => {
             </SelectContent>
           </Select>
         </div>
+        <CustomNumberInput label="Precio" id="price"/>
       </div>
       
     </div>
