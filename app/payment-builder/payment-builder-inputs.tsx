@@ -12,9 +12,14 @@ const PaymentBuilderInputs = () => {
     client: "",
     project: "",
     unit: "",
-    deliveryDate: new Date(),
+    deliveryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)), // Two years from now
     currency: "USD",
+    price: 0,
+    reservationDate: new Date(),
+    signatureDate: new Date(new Date().setMonth(new Date().getMonth() + 1)), // One month from now
   });
+
+  console.log(formInputs);
 
   return (
     <div>
@@ -34,7 +39,9 @@ const PaymentBuilderInputs = () => {
           }
         }}
       />
+
       <Separator className="my-4" />
+
       <div className="grid gap-2 grid-cols-[1fr_2fr]">
         <div className="space-y-2 col-span-1">
           <Label htmlFor="moneda">Moneda</Label>
@@ -48,7 +55,34 @@ const PaymentBuilderInputs = () => {
             </SelectContent>
           </Select>
         </div>
-        <CustomNumberInput label="Precio" id="price"/>
+        <CustomNumberInput 
+          label="Precio" 
+          id="price" 
+          value={formInputs.price.toFixed(2)} onChange={(value) => setFormInputs({ ...formInputs, price: parseFloat(value) || 0 })}
+          allowDecimals={true}
+          decimalPlaces={2}
+        />
+      </div>
+
+      <div className="grid gap-2 grid-cols-[1fr_1fr]">
+        <DatePicker 
+          label="Fecha reserva"
+          value={formInputs.reservationDate}
+          onChange={(date) => {
+            if (date instanceof Date) {
+              setFormInputs({ ...formInputs, reservationDate: date });
+            }
+          }}
+        />
+        <DatePicker 
+          label="Fecha firma"
+          value={formInputs.signatureDate}
+          onChange={(date) => {
+            if (date instanceof Date) {
+              setFormInputs({ ...formInputs, signatureDate: date });
+            }
+          }}
+        />
       </div>
       
     </div>

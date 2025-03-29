@@ -32,7 +32,7 @@ export default function DatePicker({ label, value, onChange }: DatePickerProps) 
   };
 
   return (
-    <>
+    <div className='my-2'>
       <Label className="block mb-2">{label}</Label>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
@@ -60,9 +60,10 @@ export default function DatePicker({ label, value, onChange }: DatePickerProps) 
             fromYear={2020}
             toYear={2035}
             locale={es}
+            defaultMonth={value || new Date()}
           />
         </PopoverContent>
       </Popover>
-    </>
+    </div>
   );
 }
