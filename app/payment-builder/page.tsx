@@ -17,13 +17,13 @@ export default function PaymentBuilder() {
         </div>
       </PageHeader>
 
-      <div className="p-2">
+      <div className="p-2 mx-auto max-w-2xl xl:hidden">
         <Tabs defaultValue="payment-inputs" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="payment-inputs">Configuración</TabsTrigger>
             <TabsTrigger value="plan">Plan de pago</TabsTrigger>
           </TabsList>
-          <TabsContent value="payment-inputs">
+          <TabsContent value="payment-inputs" >
             <Card>
               <CardContent >
                 <PaymentBuilderInputs />
@@ -38,6 +38,19 @@ export default function PaymentBuilder() {
             </Card>
           </TabsContent>
         </Tabs>
+      </div>
+
+      <div className="p-2 hidden xl:grid grid-cols-[auto_1fr] gap-4 ">
+        <div className="max-w-[450px]">
+          <Card>
+            <CardContent>
+              <PaymentBuilderInputs />
+            </CardContent>
+          </Card>
+        </div>
+        <div className="flex flex-col gap-2">
+          <h1>Resultdao del plan de pago</h1>
+        </div>
       </div>
     </>
   );
