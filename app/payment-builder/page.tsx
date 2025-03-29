@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
+import { Card, CardContent } from "@/components/ui/card";
+import PaymentBuilderInputs from "./payment-builder-inputs";
 
 export default function PaymentBuilder() {
   return (
@@ -22,8 +23,20 @@ export default function PaymentBuilder() {
             <TabsTrigger value="payment-inputs">Configuración</TabsTrigger>
             <TabsTrigger value="plan">Plan de pago</TabsTrigger>
           </TabsList>
-          <TabsContent value="payment-inputs">Make changes to your account here.</TabsContent>
-          <TabsContent value="plan">Change your password here.</TabsContent>
+          <TabsContent value="payment-inputs">
+            <Card>
+              <CardContent >
+                <PaymentBuilderInputs />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="plan">
+            <Card>
+              <CardContent >
+                Resultado del plan de pago
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </>
