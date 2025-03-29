@@ -1,7 +1,5 @@
 'use client';
 
-// solution link: https://github.com/shadcn-ui/ui/issues/546#issuecomment-1873947429
-
 import * as React from 'react';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
@@ -19,11 +17,19 @@ import {
 
 type DatePickerProps = {
   label: string;
+  value?: Date; // External value
+  onChange?: (date: Date | undefined) => void; // Callback for external state sync
 };
 
-export default function DatePicker({ label }: DatePickerProps) {
-  const [date, setDate] = React.useState<Date>();
+export default function DatePicker({ label, value, onChange }: DatePickerProps) {
   const [isOpen, setIsOpen] = React.useState(false); // Track popover state
+
+  const handleDateChange = (selectedDate: Date | undefined) => {
+    if (onChange) {
+      onChange(selectedDate); // Notify parent component
+    }
+    setIsOpen(false); // Close popover when a date is selected
+  };
 
   return (
     <>
@@ -34,12 +40,12 @@ export default function DatePicker({ label }: DatePickerProps) {
             variant={'outline'}
             className={cn(
               'w-full justify-start text-left font-normal',
-              !date && 'text-muted-foreground'
+              !value && 'text-muted-foreground'
             )}
           >
             <CalendarIcon />
-            {date ? (
-              format(date, 'PP', { locale: es })
+            {value ? (
+              format(value, 'PP', { locale: es })
             ) : (
               <span>Seleccionar fecha</span>
             )}
@@ -48,11 +54,8 @@ export default function DatePicker({ label }: DatePickerProps) {
         <PopoverContent className="w-auto p-0">
           <Calendar
             mode="single"
-            selected={date}
-            onSelect={(selectedDate) => {
-              setDate(selectedDate);
-              setIsOpen(false); // Close popover when a date is selected
-            }}
+            selected={value}
+            onSelect={handleDateChange}
             captionLayout="dropdown-buttons"
             fromYear={2020}
             toYear={2035}
