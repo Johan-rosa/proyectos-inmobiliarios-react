@@ -12,9 +12,12 @@ const PaymentBuilderInputs = () => {
     client: "",
     project: "",
     unit: "",
-    deliveryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)), // Two years from now
     currency: "USD",
     price: 0,
+    reservation: 0,
+    signature: 0,
+    reservationSignatuerPercent: 10,
+    deliveryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)), // Two years from now
     reservationDate: new Date(),
     signatureDate: new Date(new Date().setMonth(new Date().getMonth() + 1)), // One month from now
   });
@@ -58,7 +61,8 @@ const PaymentBuilderInputs = () => {
         <CustomNumberInput 
           label="Precio" 
           id="price" 
-          value={formInputs.price.toFixed(2)} onChange={(value) => setFormInputs({ ...formInputs, price: parseFloat(value) || 0 })}
+          value={formInputs.price.toFixed(2)} 
+          onChange={(value) => setFormInputs({ ...formInputs, price: parseFloat(value) || 0 })}
           allowDecimals={true}
           decimalPlaces={2}
         />
@@ -84,7 +88,35 @@ const PaymentBuilderInputs = () => {
           }}
         />
       </div>
-      
+
+      <div className="mb-2">
+        <div className="mb-2 grid gap-2 grid-cols-[1fr_1fr]">
+          <CustomNumberInput 
+            label="Reserva" 
+            id="reservation" 
+            value={formInputs.price.toFixed(2)}
+            onChange={(value) => setFormInputs({ ...formInputs, reservation: parseFloat(value) || 0 })}
+            allowDecimals={true}
+            decimalPlaces={2}
+          />
+          <CustomNumberInput 
+            label="Firma" 
+            id="signature" 
+            value={formInputs.signature.toFixed(2)} 
+            onChange={(value) => setFormInputs({ ...formInputs, signature: parseFloat(value) || 0 })}
+            allowDecimals={true}
+            decimalPlaces={2}
+          />
+        </div>
+        <CustomNumberInput 
+            label="% reserva y firma" 
+            id="reservation-signature-percentage" 
+            value={formInputs.reservationSignatuerPercent.toFixed(2)} 
+            onChange={(value) => setFormInputs({ ...formInputs, reservationSignatuerPercent: parseFloat(value) || 0 })}
+            allowDecimals={true}
+            decimalPlaces={2}
+          />
+      </div>   
     </div>
   )
 };
