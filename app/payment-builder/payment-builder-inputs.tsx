@@ -3,6 +3,8 @@ import {useState} from "react";
 import CustomInput from "@/components/custom-input";
 import DatePicker from "@/components/date-picker";
 import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const PaymentBuilderInputs = () => {
   const [formInputs, setFormInputs] = useState({
@@ -10,6 +12,7 @@ const PaymentBuilderInputs = () => {
     project: "",
     unit: "",
     deliveryDate: new Date(),
+    currency: "USD",
   });
 
   return (
@@ -31,6 +34,20 @@ const PaymentBuilderInputs = () => {
         }}
       />
       <Separator className="my-4" />
+      <div>
+        <div className="space-y-2 col-span-1">
+          <Label htmlFor="moneda">Moneda</Label>
+          <Select defaultValue="USD" onValueChange={(value) => setFormInputs({ ...formInputs, currency: value })}>
+            <SelectTrigger id="moneda" className="w-24">
+              <SelectValue placeholder="Moneda" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="USD">USD</SelectItem>
+              <SelectItem value="DOP">DOP</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
       
     </div>
   )
