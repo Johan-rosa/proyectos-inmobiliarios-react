@@ -18,7 +18,7 @@ export default function PaymentBuilder() {
       </PageHeader>
 
       <div className="p-2">
-        <Tabs defaultValue="payment-inputs" className="w-[400px]">
+        <Tabs defaultValue="payment-inputs" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="payment-inputs">Configuración</TabsTrigger>
             <TabsTrigger value="plan">Plan de pago</TabsTrigger>

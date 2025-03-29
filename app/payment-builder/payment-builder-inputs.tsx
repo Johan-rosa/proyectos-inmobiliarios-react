@@ -2,6 +2,7 @@
 import {useState} from "react";
 import CustomInput from "@/components/custom-input";
 import DatePicker from "@/components/date-picker";
+import { Separator } from "@/components/ui/separator";
 
 const PaymentBuilderInputs = () => {
   const [formInputs, setFormInputs] = useState({
@@ -14,7 +15,7 @@ const PaymentBuilderInputs = () => {
   return (
     <div>
       <CustomInput label="Cliente" id="client" placeholder="Nombre del cliente"/>
-      <div>
+      <div className="md:flex gap-2">
         <CustomInput label="Proyecto" id="project" placeholder="Nombre del proyecto"/>
         <CustomInput label="Unidad" id="unit" placeholder="Unidad"/>
       </div>
@@ -27,6 +28,7 @@ const PaymentBuilderInputs = () => {
           }
         }}
       />
+      <Separator className="my-4" />
     </div>
   )
 };
