@@ -15,7 +15,9 @@ const PaymentBuilderInputs = () => {
   return (
     <div>
       <CustomInput label="Cliente" id="client" placeholder="Nombre del cliente"/>
-      <div className="md:flex gap-2">
+      <div 
+        className="grid gap-2 md:grid-cols-[2fr_1fr]"
+      >
         <CustomInput label="Proyecto" id="project" placeholder="Nombre del proyecto"/>
         <CustomInput label="Unidad" id="unit" placeholder="Unidad"/>
       </div>
@@ -29,6 +31,7 @@ const PaymentBuilderInputs = () => {
         }}
       />
       <Separator className="my-4" />
+      
     </div>
   )
 };
