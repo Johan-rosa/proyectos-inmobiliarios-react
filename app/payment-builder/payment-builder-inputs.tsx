@@ -77,12 +77,30 @@ const PaymentBuilderInputs = () => {
 
   return (
     <div>
-      <CustomInput label="Cliente" id="client" placeholder="Nombre del cliente"/>
+      <CustomInput 
+        label="Cliente"
+        id="client"
+        placeholder="Nombre del cliente"
+        value={formInputs.client}
+        onChange={(e) => setFormInputs({ ...formInputs, client: e.target.value })}
+      />
       <div 
         className="grid gap-2 md:grid-cols-[2fr_1fr]"
       >
-        <CustomInput label="Proyecto" id="project" placeholder="Nombre del proyecto"/>
-        <CustomInput label="Unidad" id="unit" placeholder="Unidad"/>
+        <CustomInput
+          label="Proyecto"
+          id="project"
+          placeholder="Nombre del proyecto"
+          value={formInputs.project}
+          onChange={(e) => setFormInputs({ ...formInputs, project: e.target.value })}
+        />
+        <CustomInput
+          label="Unidad"
+          id="unit"
+          placeholder="Unidad"
+          value={formInputs.unit}
+          onChange={(e) => setFormInputs({ ...formInputs, unit: e.target.value })}
+        />
       </div>
       <DatePicker 
         label="Fecha de entrega" 
