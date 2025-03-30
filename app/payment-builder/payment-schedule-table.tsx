@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { formatNumber } from "@/lib/utils"
 
 interface PaymentScheduleProps {
   firstPaymentDate: Date
@@ -154,7 +155,7 @@ export default function PaymentSchedule({
                     </Popover>
                   </TableCell>
                   <TableCell className="text-right px-1 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
-                    ${payment.ordinary.toFixed(2)}
+                    {formatNumber(payment.ordinary)}
                   </TableCell>
                   <TableCell className="text-right px-1 sm:px-4 py-2 sm:py-3">
                     <div className="flex justify-end">
@@ -167,22 +168,22 @@ export default function PaymentSchedule({
                     </div>
                   </TableCell>
                   <TableCell className="text-right font-medium px-1 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm hidden md:table-cell">
-                    ${(payment.ordinary + payment.extra).toFixed(2)}
+                    {(payment.ordinary + payment.extra).toFixed(2)}
                   </TableCell>
                 </TableRow>
               ))}
               <TableRow className="bg-muted/50">
                 <TableCell colSpan={2} className="font-medium px-1 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
-                  Totales
+                  Total
                 </TableCell>
                 <TableCell className="text-right font-medium px-1 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
-                  ${totalOrdinary.toFixed(2)}
+                  ${formatNumber(totalOrdinary)}
                 </TableCell>
                 <TableCell className="text-right font-medium px-1 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
-                  ${totalExtra.toFixed(2)}
+                  ${formatNumber(totalExtra)}
                 </TableCell>
                 <TableCell className="text-right font-medium px-1 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm hidden md:table-cell">
-                  ${grandTotal.toFixed(2)}
+                  ${formatNumber(grandTotal)}
                 </TableCell>
               </TableRow>
             </TableBody>

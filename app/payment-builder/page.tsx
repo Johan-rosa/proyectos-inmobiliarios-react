@@ -4,9 +4,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent } from "@/components/ui/card";
 import PaymentBuilderInputs from "./payment-builder-inputs";
 import PaymentTable from "./payment-schedule-table";
+import SummaryBanner from "./payment-summary-banner";
 
 export default function PaymentBuilder() {
   const [paymentPlanValues, setPaymentPlanValues] = useState({
@@ -32,6 +32,13 @@ export default function PaymentBuilder() {
       frequency: "trimestral",
     });
 
+    const bannerStats = [
+      { id: 1, name: "Precio de cierre", value: paymentPlanValues.price },
+      { id: 2, name: "Reserva y firma", value: paymentPlanValues.reservation + paymentPlanValues.signature },
+      { id: 3, name: "En cuotas", value: paymentPlanValues.duringConstruction},
+      { id: 4, name: "Contra entrega", value: paymentPlanValues.atDelivery },
+    ]
+
   return (
     <>
       <PageHeader>
@@ -44,17 +51,23 @@ export default function PaymentBuilder() {
         </div>
       </PageHeader>
 
-      <div className="p-3 mx-auto max-w-2xl xl:hidden">
+      <div className="p-3 mx-auto max-w-3xl xl:hidden">
         <Tabs defaultValue="payment-inputs" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="payment-inputs">Configuración</TabsTrigger>
             <TabsTrigger value="plan">Plan de pago</TabsTrigger>
           </TabsList>
-          <TabsContent value="payment-inputs" >
+          <TabsContent className="max-w-2xl mx-auto" value="payment-inputs" >
             <PaymentBuilderInputs values={paymentPlanValues} exportValues={setPaymentPlanValues} />
           </TabsContent>
-          <TabsContent value="plan">
-            <h1>Resultdao del plan de pago</h1>
+          <TabsContent className="max-w-3xl" value="plan">
+            <SummaryBanner 
+              stats={bannerStats}
+              clientName={paymentPlanValues.client}
+              projectName={paymentPlanValues.project}
+              unit={paymentPlanValues.unit}
+              currency={paymentPlanValues.currency}
+            />
             <PaymentTable
               firstPaymentDate={paymentPlanValues.firstPaymentDate}
               frequencyLabel={paymentPlanValues.frequency}
@@ -65,16 +78,18 @@ export default function PaymentBuilder() {
         </Tabs>
       </div>
 
-      <div className="p-2 hidden xl:grid grid-cols-[auto_1fr] gap-4 ">
-        <div className="max-w-[450px]">
-          <Card>
-            <CardContent>
-            <PaymentBuilderInputs values={paymentPlanValues} exportValues={setPaymentPlanValues} />
-            </CardContent>
-          </Card>
+      <div className="p-2 hidden xl:grid grid-cols-[auto_1fr] gap-6 ">
+        <div className="max-w-[450px] border-r border-r-gray-200 pr-4">
+          <PaymentBuilderInputs values={paymentPlanValues} exportValues={setPaymentPlanValues} />
         </div>
         <div className="flex flex-col gap-2">
-          <h1>Resultdao del plan de pago</h1>
+          <SummaryBanner 
+            stats={bannerStats}
+            clientName={paymentPlanValues.client}
+            projectName={paymentPlanValues.project}
+            unit={paymentPlanValues.unit}
+            currency={paymentPlanValues.currency}
+          />
           <PaymentTable 
               firstPaymentDate={paymentPlanValues.firstPaymentDate}
               frequencyLabel={paymentPlanValues.frequency}
