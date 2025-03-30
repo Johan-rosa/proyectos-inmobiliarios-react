@@ -115,6 +115,46 @@ const PaymentBuilderInputs = () => {
     };
   };
 
+  const onDuringConstructionChange = (value: string) => {
+    const duringConstruction = Math.min(parseFloat(value), formInputs.price);
+
+    if (!isNaN(duringConstruction) && formInputs.price > 0) {
+      setFormInputs((prev) => {
+        const calculatedDuringConstructionPercent = duringConstruction / prev.price * 100;
+        const calculateAtDeliveryPercent = 100 - prev.reservationSignatuerPercent - calculatedDuringConstructionPercent;
+        const calculatedAtDelivery = prev.price * (calculateAtDeliveryPercent / 100);
+
+        return {
+          ...prev,
+          duringConstruction: duringConstruction,
+          duringConstructionPercent: calculatedDuringConstructionPercent,
+          atDeliveryPercent: calculateAtDeliveryPercent,
+          atDelivery: calculatedAtDelivery,
+        }
+      });
+    };
+  };
+
+  const onDuringConstructionPercentChange = (value: string) => {
+    const duringConstructionPercent = Math.min(parseFloat(value), 100);
+    if (!isNaN(duringConstructionPercent) && formInputs.price > 0) {
+      setFormInputs((prev) => {
+        const calculatedDuringConstruction = prev.price * (duringConstructionPercent / 100);
+        const calculateAtDeliveryPercent = 100 - prev.reservationSignatuerPercent - duringConstructionPercent;
+        const calculatedAtDelivery = prev.price * (calculateAtDeliveryPercent / 100);
+
+        return {
+          ...prev,
+          duringConstruction: calculatedDuringConstruction,
+          duringConstructionPercent: duringConstructionPercent,
+          atDeliveryPercent: calculateAtDeliveryPercent,
+          atDelivery: calculatedAtDelivery,
+        }
+      }
+      );
+    };
+  };
+
   const onReservationSignaturePercentChange = (value: string) => {
     const reservationSignatuerPercent = Math.min(parseFloat(value), 100);
 
@@ -250,7 +290,7 @@ const PaymentBuilderInputs = () => {
             onChange={(value) => onReservationSignaturePercentChange(value)}
             allowDecimals={true}
             decimalPlaces={2}
-          />
+            />
       </div>
 
       <div className="grid gap-2 grid-cols-[1fr_1fr]">
@@ -279,7 +319,7 @@ const PaymentBuilderInputs = () => {
             label="En cuotas" 
             id="during-construction" 
             value={formInputs.duringConstruction.toFixed(2)}
-            onChange={(value) => setFormInputs({ ...formInputs, duringConstruction: parseFloat(value) || 0 })}
+            onChange={(value) => onDuringConstructionChange(value)}
             allowDecimals={true}
             decimalPlaces={2}
           />
@@ -287,7 +327,7 @@ const PaymentBuilderInputs = () => {
             label="% en cuotas" 
             id="during-construction-percentage" 
             value={formInputs.duringConstructionPercent.toFixed(2)} 
-            onChange={(value) => setFormInputs({ ...formInputs, duringConstructionPercent: parseFloat(value) || 0 })}
+            onChange={(value) => onDuringConstructionPercentChange(value)}
             allowDecimals={true}
             decimalPlaces={2}
           />
@@ -314,7 +354,6 @@ const PaymentBuilderInputs = () => {
             label="Contra entrega" 
             id="at-delivery" 
             value={formInputs.atDelivery.toFixed(2)}
-            onChange={(value) => setFormInputs({ ...formInputs, atDelivery: parseFloat(value) || 0 })}
             allowDecimals={true}
             decimalPlaces={2}
           />
@@ -322,7 +361,6 @@ const PaymentBuilderInputs = () => {
             label="% contra entrega" 
             id="during-construction-percentage" 
             value={formInputs.atDeliveryPercent.toFixed(2)} 
-            onChange={(value) => setFormInputs({ ...formInputs, atDeliveryPercent: parseFloat(value) || 0 })}
             allowDecimals={true}
             decimalPlaces={2}
           />
