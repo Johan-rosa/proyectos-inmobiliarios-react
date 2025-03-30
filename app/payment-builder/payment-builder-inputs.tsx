@@ -77,7 +77,7 @@ const PaymentBuilderInputs = () => {
 
   const onReservationChange = (value: string) => {
     const reservation = Math.min(parseFloat(value), formInputs.price);
-    if (!isNaN(reservation) && reservation > 0) {
+    if (!isNaN(reservation) && formInputs.price > 0) {
       setFormInputs((prev) => {
         const calculatedReservationPercent = reservation / prev.price * 100;
         const calculatedReservationSignaturePercent = prev.signaturePercent + calculatedReservationPercent;
@@ -93,7 +93,28 @@ const PaymentBuilderInputs = () => {
         }
       });
     };
-  }
+  };
+
+  const onSignatureChange = (value: string) => {
+    const signature = Math.min(parseFloat(value), formInputs.price);
+
+    if (!isNaN(signature) && formInputs.price > 0) {
+      setFormInputs((prev) => {
+        const calculatedSignaturePercent = signature / prev.price * 100;
+        const calculatedReservationSignaturePercent = prev.reservationPercent + calculatedSignaturePercent;
+        const calculateAtDeliveryPercent = 100 - calculatedReservationSignaturePercent - prev.duringConstructionPercent;
+        const calculatedAtDelivery = prev.price * (calculateAtDeliveryPercent / 100);
+
+        return {
+          ...prev,
+          signature: signature,
+          reservationSignatuerPercent: calculatedReservationSignaturePercent,
+          atDeliveryPercent: calculateAtDeliveryPercent,
+          atDelivery: calculatedAtDelivery,
+        }
+      });
+    };
+  };
 
   return (
     <div>
@@ -192,7 +213,7 @@ const PaymentBuilderInputs = () => {
             label="Firma" 
             id="signature" 
             value={formInputs.signature.toFixed(2)} 
-            onChange={(value) => setFormInputs({ ...formInputs, signature: parseFloat(value) || 0 })}
+            onChange={(value) => onSignatureChange(value)}
             allowDecimals={true}
             decimalPlaces={2}
           />
