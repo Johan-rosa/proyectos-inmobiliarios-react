@@ -31,10 +31,7 @@ const PaymentBuilderInputs = () => {
     frequency: "trimestral",
   });
 
-  console.log(formInputs);
-
   const onPriceChange = (value: string) => {
-    console.log("On price change - value: ", value);
     const precio = parseFloat(value);
 
     if (!isNaN(precio) && precio > 0) {
@@ -87,6 +84,7 @@ const PaymentBuilderInputs = () => {
         return {
           ...prev,
           reservation: reservation,
+          reservationPercent: calculatedReservationPercent,
           reservationSignatuerPercent: calculatedReservationSignaturePercent,
           atDeliveryPercent: calculateAtDeliveryPercent,
           atDelivery: calculatedAtDelivery,
@@ -108,6 +106,7 @@ const PaymentBuilderInputs = () => {
         return {
           ...prev,
           signature: signature,
+          signaturePercent: calculatedSignaturePercent,
           reservationSignatuerPercent: calculatedReservationSignaturePercent,
           atDeliveryPercent: calculateAtDeliveryPercent,
           atDelivery: calculatedAtDelivery,
@@ -115,6 +114,32 @@ const PaymentBuilderInputs = () => {
       });
     };
   };
+
+  const onReservationSignaturePercentChange = (value: string) => {
+    const reservationSignatuerPercent = Math.min(parseFloat(value), 100);
+
+    if (!isNaN(reservationSignatuerPercent) && formInputs.price > 0) {
+      setFormInputs((prev) => {
+        const calculatedReservationPercent = prev.reservationPercent >= reservationSignatuerPercent ? reservationSignatuerPercent : prev.reservationPercent;
+        const calculatedSignaturePercent = reservationSignatuerPercent - calculatedReservationPercent;
+        const calculatedReservation = prev.price * (calculatedReservationPercent / 100);
+        const calculatedSignature = prev.price * (calculatedSignaturePercent / 100);
+        const calculateAtDeliveryPercent = 100 - reservationSignatuerPercent - prev.duringConstructionPercent;
+        const calculatedAtDelivery = prev.price * (calculateAtDeliveryPercent / 100);
+
+        return {
+          ...prev,
+          reservationSignatuerPercent: reservationSignatuerPercent,
+          reservationPercent: calculatedReservationPercent,
+          signaturePercent: calculatedSignaturePercent,
+          reservation: calculatedReservation,
+          signature: calculatedSignature,
+          atDeliveryPercent: calculateAtDeliveryPercent,
+          atDelivery: calculatedAtDelivery,
+        };
+      });
+    };
+  }
 
   return (
     <div>
@@ -216,13 +241,13 @@ const PaymentBuilderInputs = () => {
             onChange={(value) => onSignatureChange(value)}
             allowDecimals={true}
             decimalPlaces={2}
-          />
+            />
         </div>
         <CustomNumberInput 
             label="% reserva y firma" 
             id="reservation-signature-percentage" 
             value={formInputs.reservationSignatuerPercent.toFixed(2)} 
-            onChange={(value) => setFormInputs({ ...formInputs, reservationSignatuerPercent: parseFloat(value) || 0 })}
+            onChange={(value) => onReservationSignaturePercentChange(value)}
             allowDecimals={true}
             decimalPlaces={2}
           />
