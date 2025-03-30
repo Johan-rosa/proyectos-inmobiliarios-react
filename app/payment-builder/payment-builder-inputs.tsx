@@ -39,6 +39,7 @@ interface PaymentBuilderInputsProps {
 function PaymentBuilderInputs({ values, exportValues }: PaymentBuilderInputsProps) {
   const [formInputs, setFormInputs] = useState(values);
   useEffect(() => { exportValues(formInputs) }, [formInputs, exportValues]);
+  useEffect(() => { setFormInputs(values) }, [values]);
 
   const onPriceChange = (value: string) => {
     const precio = parseFloat(value);
@@ -218,7 +219,7 @@ function PaymentBuilderInputs({ values, exportValues }: PaymentBuilderInputsProp
         />
       </div>
       <DatePicker 
-        label="Fecha de entrega" 
+        label="Fecha de entrega"
         value={formInputs.deliveryDate}
         onChange={(date) => {
           if (date instanceof Date) {
@@ -344,7 +345,7 @@ function PaymentBuilderInputs({ values, exportValues }: PaymentBuilderInputsProp
 
         <div className="mb-4">
           <Label className="block mb-2">Frecuencia de los pagos</Label>
-          <Select defaultValue="trimestral" onValueChange={(value) => setFormInputs({ ...formInputs, frequency: value })}>
+          <Select defaultValue="trimestral" value={formInputs.frequency} onValueChange={(value) => setFormInputs({ ...formInputs, frequency: value })}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Seleccionar frecuencia" />
             </SelectTrigger>
