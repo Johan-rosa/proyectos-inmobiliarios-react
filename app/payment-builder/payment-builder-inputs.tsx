@@ -75,6 +75,26 @@ const PaymentBuilderInputs = () => {
     }
   };
 
+  const onReservationChange = (value: string) => {
+    const reservation = Math.min(parseFloat(value), formInputs.price);
+    if (!isNaN(reservation) && reservation > 0) {
+      setFormInputs((prev) => {
+        const calculatedReservationPercent = reservation / prev.price * 100;
+        const calculatedReservationSignaturePercent = prev.signaturePercent + calculatedReservationPercent;
+        const calculateAtDeliveryPercent = 100 - calculatedReservationSignaturePercent - prev.duringConstructionPercent;
+        const calculatedAtDelivery = prev.price * (calculateAtDeliveryPercent / 100);
+
+        return {
+          ...prev,
+          reservation: reservation,
+          reservationSignatuerPercent: calculatedReservationSignaturePercent,
+          atDeliveryPercent: calculateAtDeliveryPercent,
+          atDelivery: calculatedAtDelivery,
+        }
+      });
+    };
+  }
+
   return (
     <div>
       <CustomInput 
@@ -164,7 +184,7 @@ const PaymentBuilderInputs = () => {
             label="Reserva" 
             id="reservation" 
             value={formInputs.reservation.toFixed(2)}
-            onChange={(value) => setFormInputs({ ...formInputs, reservation: parseFloat(value) || 0 })}
+            onChange={(value) => onReservationChange(value)}
             allowDecimals={true}
             decimalPlaces={2}
           />
