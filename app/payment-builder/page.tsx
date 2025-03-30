@@ -44,31 +44,23 @@ export default function PaymentBuilder() {
         </div>
       </PageHeader>
 
-      <div className="p-2 mx-auto max-w-2xl xl:hidden">
+      <div className="p-3 mx-auto max-w-2xl xl:hidden">
         <Tabs defaultValue="payment-inputs" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="payment-inputs">Configuración</TabsTrigger>
             <TabsTrigger value="plan">Plan de pago</TabsTrigger>
           </TabsList>
           <TabsContent value="payment-inputs" >
-            <Card>
-              <CardContent >
-                <PaymentBuilderInputs values={paymentPlanValues} exportValues={setPaymentPlanValues} />
-              </CardContent>
-            </Card>
+            <PaymentBuilderInputs values={paymentPlanValues} exportValues={setPaymentPlanValues} />
           </TabsContent>
           <TabsContent value="plan">
-            <Card>
-              <CardContent >
-              <h1>Resultdao del plan de pago</h1>
-              <PaymentTable
-                firstPaymentDate={paymentPlanValues.firstPaymentDate}
-                frequency={3}
-                cealingPayment={paymentPlanValues.deliveryDate}
-                totalToPay={paymentPlanValues.duringConstruction}
-              />
-              </CardContent>
-            </Card>
+            <h1>Resultdao del plan de pago</h1>
+            <PaymentTable
+              firstPaymentDate={paymentPlanValues.firstPaymentDate}
+              frequencyLabel={paymentPlanValues.frequency}
+              cealingPayment={paymentPlanValues.deliveryDate}
+              totalToPay={paymentPlanValues.duringConstruction}
+            />
           </TabsContent>
         </Tabs>
       </div>
@@ -85,7 +77,7 @@ export default function PaymentBuilder() {
           <h1>Resultdao del plan de pago</h1>
           <PaymentTable 
               firstPaymentDate={paymentPlanValues.firstPaymentDate}
-              frequency={3}
+              frequencyLabel={paymentPlanValues.frequency}
               cealingPayment={paymentPlanValues.deliveryDate}
               totalToPay={paymentPlanValues.duringConstruction}
           />
