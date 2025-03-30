@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 interface PaymentScheduleProps {
   firstPaymentDate: Date
-  frequency: number
+  frequencyLabel: string
   cealingPayment: Date
   totalToPay: number
 }
@@ -27,15 +27,26 @@ interface Payment {
 
 export default function PaymentSchedule({
   firstPaymentDate = new Date(),
-  frequency = 1,
+  frequencyLabel = "trimestral",
   cealingPayment = addMonths(new Date(), 12),
   totalToPay = 10000,
 }: PaymentScheduleProps) {
   const [payments, setPayments] = useState<Payment[]>([])
 
+  // Frequency mapping
+  const frequencyMap: Record<string, number> = {
+    mensual: 1,
+    bimestral: 2,
+    trimestral: 3,
+    cuatrimestral: 4,
+    semestral: 6,
+  }
+  const frequency = frequencyMap[frequencyLabel] || 3 
+
   // Generate payment schedule
   useEffect(() => {
     generatePaymentSchedule()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstPaymentDate, frequency, cealingPayment, totalToPay])
 
   const generatePaymentSchedule = () => {
