@@ -16,9 +16,11 @@ const PaymentBuilderInputs = () => {
     price: 0,
     reservation: 0,
     signature: 0,
+    reservationPercent: 5,
+    signaturePercent: 5,
+    reservationSignatuerPercent: 10,
     duringConstruction: 0,
     duringConstructionPercent: 40,
-    reservationSignatuerPercent: 10,
     atDelivery: 0,
     atDeliveryPercent: 50,
     deliveryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)),
@@ -30,6 +32,48 @@ const PaymentBuilderInputs = () => {
   });
 
   console.log(formInputs);
+
+  const onPriceChange = (value: string) => {
+    console.log("On price change - value: ", value);
+    const precio = parseFloat(value);
+
+    if (!isNaN(precio) && precio > 0) {
+      setFormInputs((prev) => {
+        const calculatedReservation = Math.min(precio * (prev.reservationPercent / 100), 5000);
+        const calculatedReservationPercent = calculatedReservation / precio * 100;
+        const calculatedSignaturePercent = prev.reservationSignatuerPercent - calculatedReservationPercent;
+        const calculatedSignature = precio * (calculatedSignaturePercent / 100);
+        const calculatedDuringConstruction = precio * (prev.duringConstructionPercent / 100);
+        const calculatedAtDelivery = precio * (prev.atDeliveryPercent / 100);
+
+        return {
+          ...prev,
+          price: precio,
+          reservation: calculatedReservation,
+          reservationPercent: calculatedReservationPercent,
+          signature: calculatedSignature,
+          signaturePercent: calculatedSignaturePercent,
+          reservationSignatuerPercent: calculatedReservationPercent + calculatedSignaturePercent,
+          atDelivery: calculatedAtDelivery,
+          duringConstruction: calculatedDuringConstruction,
+        }
+      });
+    } else {
+      setFormInputs((prev) => ({
+        ...prev,
+        price: 0,
+        reservation: 0,
+        reservationPercent: 5,
+        signature: 0,
+        signaturePercent: 5,
+        reservationSignatuerPercent: 10,
+        atDelivery: 0,
+        atDeliveryPercent: 50,
+        duringConstruction: 0,
+        duringConstructionPercent: 40,
+      }));
+    }
+  };
 
   return (
     <div>
@@ -69,7 +113,7 @@ const PaymentBuilderInputs = () => {
           label="Precio" 
           id="price" 
           value={formInputs.price.toFixed(2)} 
-          onChange={(value) => setFormInputs({ ...formInputs, price: parseFloat(value) || 0 })}
+          onChange={(value) => onPriceChange(value)}
           allowDecimals={true}
           decimalPlaces={2}
         />
