@@ -1,10 +1,37 @@
+'use client';
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card";
 import PaymentBuilderInputs from "./payment-builder-inputs";
+import PaymentTable from "./payment-schedule-table";
 
 export default function PaymentBuilder() {
+  const [paymentPlanValues, setPaymentPlanValues] = useState({
+      client: "",
+      project: "",
+      unit: "",
+      currency: "USD",
+      price: 0,
+      reservation: 0,
+      signature: 0,
+      reservationPercent: 5,
+      signaturePercent: 5,
+      reservationSignatuerPercent: 10,
+      duringConstruction: 0,
+      duringConstructionPercent: 40,
+      atDelivery: 0,
+      atDeliveryPercent: 50,
+      deliveryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)),
+      reservationDate: new Date(),
+      signatureDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+      firstPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 2)),
+      lastPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+      frequency: "trimestral",
+    });
+
   return (
     <>
       <PageHeader>
@@ -26,14 +53,20 @@ export default function PaymentBuilder() {
           <TabsContent value="payment-inputs" >
             <Card>
               <CardContent >
-                <PaymentBuilderInputs />
+                <PaymentBuilderInputs values={paymentPlanValues} exportValues={setPaymentPlanValues} />
               </CardContent>
             </Card>
           </TabsContent>
           <TabsContent value="plan">
             <Card>
               <CardContent >
-                Resultado del plan de pago
+              <h1>Resultdao del plan de pago</h1>
+              <PaymentTable
+                firstPaymentDate={paymentPlanValues.firstPaymentDate}
+                frequency={3}
+                cealingPayment={paymentPlanValues.deliveryDate}
+                totalToPay={paymentPlanValues.duringConstruction}
+              />
               </CardContent>
             </Card>
           </TabsContent>
@@ -44,12 +77,18 @@ export default function PaymentBuilder() {
         <div className="max-w-[450px]">
           <Card>
             <CardContent>
-              <PaymentBuilderInputs />
+            <PaymentBuilderInputs values={paymentPlanValues} exportValues={setPaymentPlanValues} />
             </CardContent>
           </Card>
         </div>
         <div className="flex flex-col gap-2">
           <h1>Resultdao del plan de pago</h1>
+          <PaymentTable 
+              firstPaymentDate={paymentPlanValues.firstPaymentDate}
+              frequency={3}
+              cealingPayment={paymentPlanValues.deliveryDate}
+              totalToPay={paymentPlanValues.duringConstruction}
+          />
         </div>
       </div>
     </>
