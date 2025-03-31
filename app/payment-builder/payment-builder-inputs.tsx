@@ -1,5 +1,5 @@
 'use client';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import CustomInput from "@/components/custom-input";
 import DatePicker from "@/components/date-picker";
 import { Separator } from "@/components/ui/separator";
@@ -7,29 +7,39 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CustomNumberInput from "@/components/custom-number-input";
 
-const PaymentBuilderInputs = () => {
-  const [formInputs, setFormInputs] = useState({
-    client: "",
-    project: "",
-    unit: "",
-    currency: "USD",
-    price: 0,
-    reservation: 0,
-    signature: 0,
-    reservationPercent: 5,
-    signaturePercent: 5,
-    reservationSignatuerPercent: 10,
-    duringConstruction: 0,
-    duringConstructionPercent: 40,
-    atDelivery: 0,
-    atDeliveryPercent: 50,
-    deliveryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)),
-    reservationDate: new Date(),
-    signatureDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-    firstPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 2)),
-    lastPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-    frequency: "trimestral",
-  });
+// Define the type for form values
+interface FormValues {
+  client: string;
+  project: string;
+  unit: string;
+  currency: string;
+  price: number;
+  reservation: number;
+  signature: number;
+  reservationPercent: number;
+  signaturePercent: number;
+  reservationSignatuerPercent: number;
+  duringConstruction: number;
+  duringConstructionPercent: number;
+  atDelivery: number;
+  atDeliveryPercent: number;
+  deliveryDate: Date;
+  reservationDate: Date;
+  signatureDate: Date;
+  firstPaymentDate: Date;
+  lastPaymentDate: Date;
+  frequency: string;
+}
+
+interface PaymentBuilderInputsProps {
+  values: FormValues;
+  exportValues: (values: FormValues) => void;
+}
+
+function PaymentBuilderInputs({ values, exportValues }: PaymentBuilderInputsProps) {
+  const [formInputs, setFormInputs] = useState(values);
+  useEffect(() => { exportValues(formInputs) }, [formInputs, exportValues]);
+  useEffect(() => { setFormInputs(values) }, [values]);
 
   const onPriceChange = (value: string) => {
     const precio = parseFloat(value);
@@ -209,7 +219,7 @@ const PaymentBuilderInputs = () => {
         />
       </div>
       <DatePicker 
-        label="Fecha de entrega" 
+        label="Fecha de entrega"
         value={formInputs.deliveryDate}
         onChange={(date) => {
           if (date instanceof Date) {
@@ -335,7 +345,7 @@ const PaymentBuilderInputs = () => {
 
         <div className="mb-4">
           <Label className="block mb-2">Frecuencia de los pagos</Label>
-          <Select defaultValue="trimestral" onValueChange={(value) => setFormInputs({ ...formInputs, frequency: value })}>
+          <Select defaultValue="trimestral" value={formInputs.frequency} onValueChange={(value) => setFormInputs({ ...formInputs, frequency: value })}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Seleccionar frecuencia" />
             </SelectTrigger>
