@@ -8,6 +8,8 @@ import PaymentBuilderInputs from "./payment-builder-inputs";
 import PaymentTable from "./payment-schedule-table";
 import SummaryBanner from "./payment-summary-banner";
 
+import { Payment } from "@/types";
+
 export default function PaymentBuilder() {
   const [paymentPlanValues, setPaymentPlanValues] = useState({
       client: "",
@@ -30,6 +32,7 @@ export default function PaymentBuilder() {
       firstPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 2)),
       lastPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
       frequency: "trimestral",
+      payments: [] as Payment[],
     });
 
     const bannerStats = [
