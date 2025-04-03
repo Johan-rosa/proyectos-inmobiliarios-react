@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { format, addMonths, isBefore } from "date-fns"
 import { es } from "date-fns/locale"
 import { CalendarIcon } from "lucide-react"
@@ -19,6 +19,8 @@ interface PaymentScheduleProps {
   frequencyLabel: string
   cealingPayment: Date
   totalToPay: number
+  payments: Payment[]
+  setPayments: (payments: Payment[]) => void
 }
 
 export default function PaymentSchedule({
@@ -26,9 +28,9 @@ export default function PaymentSchedule({
   frequencyLabel = "trimestral",
   cealingPayment = addMonths(new Date(), 12),
   totalToPay = 10000,
+  payments = [],
+  setPayments = () => {},
 }: PaymentScheduleProps) {
-
-  const [payments, setPayments] = useState<Payment[]>([])
 
   // Frequency mapping
   const frequencyMap: Record<string, number> = {

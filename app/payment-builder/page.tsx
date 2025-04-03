@@ -42,6 +42,12 @@ export default function PaymentBuilder() {
       { id: 4, name: "Contra entrega", value: paymentPlanValues.atDelivery },
     ]
 
+  const handlePaymentsChange = (payments: Payment[]) => {
+    setPaymentPlanValues((prevValues) => ({
+      ...prevValues,
+      payments: payments,
+  }))};
+
   return (
     <>
       <PageHeader>
@@ -76,6 +82,8 @@ export default function PaymentBuilder() {
               frequencyLabel={paymentPlanValues.frequency}
               cealingPayment={paymentPlanValues.deliveryDate}
               totalToPay={paymentPlanValues.duringConstruction}
+              setPayments={handlePaymentsChange}
+              payments={paymentPlanValues.payments}
             />
           </TabsContent>
         </Tabs>
@@ -98,6 +106,8 @@ export default function PaymentBuilder() {
               frequencyLabel={paymentPlanValues.frequency}
               cealingPayment={paymentPlanValues.deliveryDate}
               totalToPay={paymentPlanValues.duringConstruction}
+              setPayments={handlePaymentsChange}
+              payments={paymentPlanValues.payments}
           />
         </div>
       </div>
