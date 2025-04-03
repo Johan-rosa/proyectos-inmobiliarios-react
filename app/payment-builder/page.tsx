@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import PaymentBuilderInputs from "./payment-builder-inputs"
 import PaymentTable from "./payment-schedule-table"
 import SummaryBanner from "./payment-summary-banner"
+import { toast } from "sonner"
+
 
 import type { Payment } from "@/types"
 
@@ -68,7 +70,7 @@ export default function PaymentBuilder() {
           <h1 className="text-xl font-medium">Crear plan de pago</h1>
           <div className="lg:flex flex-wrap gap-2 hidden">
             <Button variant="secondary">Descartar</Button>
-            <Button>Guardar</Button>
+            <Button onClick={() => toast("Event has been created.")}>Guardar</Button>
           </div>
         </div>
       </PageHeader>
