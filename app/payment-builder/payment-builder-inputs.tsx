@@ -7,33 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CustomNumberInput from "@/components/custom-number-input";
 
-// Define the type for form values
-interface FormValues {
-  client: string;
-  project: string;
-  unit: string;
-  currency: string;
-  price: number;
-  reservation: number;
-  signature: number;
-  reservationPercent: number;
-  signaturePercent: number;
-  reservationSignatuerPercent: number;
-  duringConstruction: number;
-  duringConstructionPercent: number;
-  atDelivery: number;
-  atDeliveryPercent: number;
-  deliveryDate: Date;
-  reservationDate: Date;
-  signatureDate: Date;
-  firstPaymentDate: Date;
-  lastPaymentDate: Date;
-  frequency: string;
-}
+import { PaymentPlan } from "@/types";
 
 interface PaymentBuilderInputsProps {
-  values: FormValues;
-  exportValues: (values: FormValues) => void;
+  values: PaymentPlan;
+  exportValues: (values: PaymentPlan) => void;
 }
 
 function PaymentBuilderInputs({ values, exportValues }: PaymentBuilderInputsProps) {

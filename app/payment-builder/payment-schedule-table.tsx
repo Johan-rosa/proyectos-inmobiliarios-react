@@ -12,18 +12,13 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { formatNumber } from "@/lib/utils"
 
+import { Payment } from "@/types"
+
 interface PaymentScheduleProps {
   firstPaymentDate: Date
   frequencyLabel: string
   cealingPayment: Date
   totalToPay: number
-}
-
-interface Payment {
-  id: number
-  date: Date
-  ordinary: number
-  extra: number
 }
 
 export default function PaymentSchedule({
@@ -32,6 +27,7 @@ export default function PaymentSchedule({
   cealingPayment = addMonths(new Date(), 12),
   totalToPay = 10000,
 }: PaymentScheduleProps) {
+
   const [payments, setPayments] = useState<Payment[]>([])
 
   // Frequency mapping
