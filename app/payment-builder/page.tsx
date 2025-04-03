@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useTransition} from "react"
 import { Button } from "@/components/ui/button"
 import { PageHeader } from "@/components/app-header"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -8,34 +8,40 @@ import PaymentBuilderInputs from "./payment-builder-inputs"
 import PaymentTable from "./payment-schedule-table"
 import SummaryBanner from "./payment-summary-banner"
 import { toast } from "sonner"
+import { savePaymentPlan } from "@/services/payment-plan-service"
 
 
 import type { Payment } from "@/types"
 
+const defaultValues = {
+  client: "",
+  project: "",
+  unit: "",
+  currency: "USD",
+  price: 0,
+  reservation: 0,
+  signature: 0,
+  reservationPercent: 5,
+  signaturePercent: 5,
+  reservationSignatuerPercent: 10,
+  duringConstruction: 0,
+  duringConstructionPercent: 40,
+  atDelivery: 0,
+  atDeliveryPercent: 50,
+  deliveryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)),
+  reservationDate: new Date(),
+  signatureDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+  firstPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 2)),
+  lastPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+  frequency: "trimestral",
+  payments: [] as Payment[],
+}
+
 export default function PaymentBuilder() {
-  const [paymentPlanValues, setPaymentPlanValues] = useState({
-    client: "",
-    project: "",
-    unit: "",
-    currency: "USD",
-    price: 0,
-    reservation: 0,
-    signature: 0,
-    reservationPercent: 5,
-    signaturePercent: 5,
-    reservationSignatuerPercent: 10,
-    duringConstruction: 0,
-    duringConstructionPercent: 40,
-    atDelivery: 0,
-    atDeliveryPercent: 50,
-    deliveryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 2)),
-    reservationDate: new Date(),
-    signatureDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-    firstPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 2)),
-    lastPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-    frequency: "trimestral",
-    payments: [] as Payment[],
-  })
+  const [paymentPlanValues, setPaymentPlanValues] = useState(defaultValues)
+  
+    // State for loading indicators
+    const [isPending, startTransition] = useTransition()
 
   const bannerStats = [
     { id: 1, name: "Precio de cierre", value: paymentPlanValues.price },
@@ -44,7 +50,6 @@ export default function PaymentBuilder() {
     { id: 4, name: "Contra entrega", value: paymentPlanValues.atDelivery },
   ]
 
-  // Use useCallback to prevent unnecessary re-renders
   const handlePaymentsChange = useCallback((payments: Payment[]) => {
     setPaymentPlanValues((prevValues) => {
       // Only update if the payments have actually changed
@@ -58,10 +63,54 @@ export default function PaymentBuilder() {
     })
   }, [])
 
-  // Use useCallback for exportValues to prevent unnecessary re-renders
   const exportValues = useCallback((values: typeof paymentPlanValues) => {
     setPaymentPlanValues(values)
   }, [])
+
+  // Handle saving the payment plan to Firebase
+  const handleSavePaymentPlan = async () => {
+    // Validate required fields
+    if (!paymentPlanValues.client) {
+      toast.error("Error al guardar", {
+        description: "El nombre del cliente es obligatorio"
+      })
+      return
+    }
+
+    if (paymentPlanValues.price <= 0) {
+      toast.error("Error al guardar", {
+        description: "El precio debe ser mayor que cero"
+      })
+      return
+    }
+
+    // Save to Firebase
+    startTransition(async () => {
+      try {
+        const planId = await savePaymentPlan(paymentPlanValues)
+
+        setPaymentPlanValues(defaultValues)
+        toast.success("Plan de pago guardado", {
+          description: `Plan guardado con ID: ${planId}`,
+        })
+      } catch (error) {
+        console.error("Error saving payment plan:", error)
+        toast.error("Error al guarder", {
+          description: "Ocurrió un error al guardar el plan de pago"
+        })
+      }
+    })
+  }
+
+  // Handle discarding changes
+  const handleDiscard = () => {
+    // Reset to default values
+    setPaymentPlanValues(defaultValues)
+
+    toast.success("Cambios descartados", {
+      description: "Se han descartado todos los cambios",
+    })
+  }
 
   return (
     <>
@@ -69,8 +118,10 @@ export default function PaymentBuilder() {
         <div className="w-full h-auto flex flex-wrap items-center justify-between p-2">
           <h1 className="text-xl font-medium">Crear plan de pago</h1>
           <div className="lg:flex flex-wrap gap-2 hidden">
-            <Button variant="secondary">Descartar</Button>
-            <Button onClick={() => toast("Event has been created.")}>Guardar</Button>
+            <Button variant="secondary" onClick={handleDiscard}>Descartar</Button>
+            <Button onClick={handleSavePaymentPlan} disabled={isPending}>
+              {isPending ? "Guardando..." : "Guardar"}
+            </Button>
           </div>
         </div>
       </PageHeader>

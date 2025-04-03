@@ -3,7 +3,6 @@ import {
   addDoc, 
   updateDoc, 
   doc, 
-  serverTimestamp, 
   getDoc, 
   getDocs, 
   query, 
@@ -61,21 +60,21 @@ const preparePaymentPlanForFirestore = (paymentPlan: PaymentPlan): FirestorePaym
   const planForFirestore: Partial<FirestorePaymentPlan> = { 
     ...paymentPlan,
     // Convert Date objects to timestamps
-    deliveryDate: serverTimestamp(),
-    reservationDate: serverTimestamp(),
-    signatureDate: serverTimestamp(),
-    firstPaymentDate: serverTimestamp(),
-    lastPaymentDate: serverTimestamp(),
+    deliveryDate: Timestamp.now(),
+    reservationDate: Timestamp.now(),
+    signatureDate: Timestamp.now(),
+    firstPaymentDate: Timestamp.now(),
+    lastPaymentDate: Timestamp.now(),
     
     // Convert dates in payments array
     payments: paymentPlan.payments.map(payment => ({
       ...payment,
-      date: serverTimestamp()
+      date: Timestamp.now()
     })),
     
     // Add metadata
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
   };
   
   return planForFirestore as FirestorePaymentPlan;
@@ -143,7 +142,7 @@ export const updatePaymentPlan = async (id: string, paymentPlan: PaymentPlan): P
     const docRef = doc(db, 'paymentPlans', id);
     await updateDoc(docRef, {
       ...planForFirestore,
-      updatedAt: serverTimestamp()
+      updatedAt: Timestamp.now()
     });
   } catch (error) {
     console.error('Error updating payment plan:', error);
@@ -242,7 +241,7 @@ export const deletePaymentPlan = async (id: string): Promise<void> => {
     const docRef = doc(db, 'paymentPlans', id);
     await updateDoc(docRef, { 
       deleted: true,
-      deletedAt: serverTimestamp() 
+      deletedAt: Timestamp.now() 
     });
   } catch (error) {
     console.error('Error deleting payment plan:', error);

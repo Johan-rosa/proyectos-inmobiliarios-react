@@ -35,7 +35,6 @@ export default function PaymentPlansTable() {
   const [plans, setPlans] = useState<(PaymentPlan & { id: string })[]>([])
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [hasMore, setHasMore] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
   const [queryOptions, setQueryOptions] = useState<PaymentPlanQueryOptions>({
     pageSize: 10,
     sortBy: "createdAt",
@@ -55,14 +54,6 @@ export default function PaymentPlansTable() {
         startAfterDoc: reset ? undefined : lastDoc || undefined
       }
 
-      if (searchTerm) {
-        if (searchTerm.includes("@")) {
-          options.client = searchTerm
-        } else {
-          options.project = searchTerm
-        }
-      }
-
       const result = await getPaymentPlans(options)
       
       setPlans(reset ? result.plans : [...plans, ...result.plans])
@@ -73,10 +64,6 @@ export default function PaymentPlansTable() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  const handleSearch = () => {
-    loadPaymentPlans(true)
   }
 
   const handleSort = (sortBy: PaymentPlanQueryOptions["sortBy"]) => {
