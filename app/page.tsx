@@ -1,9 +1,26 @@
+'use client'
+
+import React, { useEffect, useState } from "react";
 import { PageHeader } from "@/components/app-header";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { usePaymentPlans } from '@/hooks/use-payment-plans';
+import type { PaymentPlan } from '@/types';
 
 export default function Home() {
+
+  const { plans, loading, error } = usePaymentPlans();
+  const [plansData, setPlansData] = useState<PaymentPlan[]>([]);
+
+  useEffect(() => {
+    if (!loading && !error) {
+      setPlansData(plans);
+    }
+  }, [plans, loading, error]);
+
+  console.log(plansData);
+
   return (
     <main>
       <PageHeader>
