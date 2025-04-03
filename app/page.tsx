@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePaymentPlans } from '@/hooks/use-payment-plans';
+import PaymentPlansTable from "@/app/payments-table"
 import type { PaymentPlan } from '@/types';
 
 export default function Home() {
@@ -36,13 +37,15 @@ export default function Home() {
       </PageHeader>
 
       <div className="p-2">
-        <div className="flex gap-2 lg:hidden">
+        <div className="flex gap-2 lg:hidden mb-2">
           <Input className="" type="search" placeholder="Buscar" />
           <Link href="/payment-builder">
             <Button>Crear plan de pago</Button>
           </Link>
         </div>
+        <PaymentPlansTable />
       </div>
+
     </main>
   );
 }
