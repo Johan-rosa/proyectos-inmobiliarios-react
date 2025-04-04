@@ -151,6 +151,12 @@ export default function PaymentBuilder() {
               setPayments={handlePaymentsChange}
               payments={paymentPlanValues.payments}
             />
+            <div className="lg:hidden flex flex-wrap gap-2 mx-auto">
+            <Button variant="secondary" onClick={handleDiscard}>Descartar</Button>
+            <Button onClick={handleSavePaymentPlan} disabled={isPending}>
+              {isPending ? "Guardando..." : "Guardar"}
+            </Button>
+          </div>
           </TabsContent>
         </Tabs>
       </div>
@@ -175,14 +181,6 @@ export default function PaymentBuilder() {
             setPayments={handlePaymentsChange}
             payments={paymentPlanValues.payments}
           />
-
-          <div className="lg:hidden flex flex-wrap gap-2 mx-auto">
-            <Button variant="secondary" onClick={handleDiscard}>Descartar</Button>
-            <Button onClick={handleSavePaymentPlan} disabled={isPending}>
-              {isPending ? "Guardando..." : "Guardar"}
-            </Button>
-          </div>
-          
         </div>
       </div>
     </>
