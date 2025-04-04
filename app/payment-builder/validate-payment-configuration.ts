@@ -6,14 +6,14 @@ export const validatePaymentConfiguration = (plan: PaymentPlan) => {
         toast.warning("Revisar configuración", {
         description: "El nombre del cliente es obligatorio"
         })
-        return
+        return false
     }
 
     if (plan.price <= 0) {
         toast.warning("Revisar configuaración", {
         description: "El precio debe ser mayor que cero"
         })
-        return
+        return false
     }
 
     if (
@@ -26,13 +26,15 @@ export const validatePaymentConfiguration = (plan: PaymentPlan) => {
         toast.warning("Revisar configuaración", {
         description: "El monto a pagar supera el precio de cierre"
         })
-        return
+        return false
     }
 
     if (plan.deliveryDate < plan.lastPaymentDate) {
         toast.warning("Revisar configuaración", {
         description: "La fecha de la última cuota debe ser previa a la fecha de entrega"
         })
-        return
+        return false
     }
+
+    return true
 }
