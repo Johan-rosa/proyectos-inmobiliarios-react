@@ -69,7 +69,8 @@ export default function PaymentBuilder() {
 
   // Handle saving the payment plan to Firebase
   const handleSavePaymentPlan = async () => {
-    validatePaymentConfiguration(paymentPlanValues)
+    const isValid = validatePaymentConfiguration(paymentPlanValues)
+    if (!isValid) return
 
     // Save to Firebase
     startTransition(async () => {
