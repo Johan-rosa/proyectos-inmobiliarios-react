@@ -9,7 +9,7 @@ import PaymentTable from "./payment-schedule-table"
 import SummaryBanner from "./payment-summary-banner"
 import { toast } from "sonner"
 import { savePaymentPlan } from "@/services/payment-plan-service"
-
+import { validatePaymentConfiguration } from "./validate-payment-configuration"
 
 import type { Payment } from "@/types"
 
@@ -69,20 +69,8 @@ export default function PaymentBuilder() {
 
   // Handle saving the payment plan to Firebase
   const handleSavePaymentPlan = async () => {
-    // Validate required fields
-    if (!paymentPlanValues.client) {
-      toast.error("Error al guardar", {
-        description: "El nombre del cliente es obligatorio"
-      })
-      return
-    }
-
-    if (paymentPlanValues.price <= 0) {
-      toast.error("Error al guardar", {
-        description: "El precio debe ser mayor que cero"
-      })
-      return
-    }
+    const isValid = validatePaymentConfiguration(paymentPlanValues)
+    if (!isValid) return
 
     // Save to Firebase
     startTransition(async () => {
@@ -151,6 +139,12 @@ export default function PaymentBuilder() {
               setPayments={handlePaymentsChange}
               payments={paymentPlanValues.payments}
             />
+            <div className="lg:hidden mt-4 flex content-end w-full flex-wrap gap-2">
+              <Button variant="secondary" onClick={handleDiscard}>Descartar</Button>
+              <Button onClick={handleSavePaymentPlan} disabled={isPending}>
+                {isPending ? "Guardando..." : "Guardar"}
+              </Button>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
