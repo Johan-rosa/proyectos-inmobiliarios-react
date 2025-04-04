@@ -30,12 +30,9 @@ export const validatePaymentConfiguration = (plan: PaymentPlan) => {
     }
 
     if (
-        (
-        plan.reservation + 
-        plan.signature + 
-        plan.duringConstruction + 
-        plan.atDelivery
-        ) > plan.price
+        plan.reservation < 0 || 
+        plan.duringConstruction < 0 || 
+        plan.atDelivery < 0
     ) {
         toast.warning("Revisar configuaración", {
         description: "El monto a pagar supera el precio de cierre"
