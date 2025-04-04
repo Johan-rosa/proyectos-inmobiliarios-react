@@ -29,6 +29,20 @@ export const validatePaymentConfiguration = (plan: PaymentPlan) => {
         return false
     }
 
+    if (
+        (
+        plan.reservation + 
+        plan.signature + 
+        plan.duringConstruction + 
+        plan.atDelivery
+        ) > plan.price
+    ) {
+        toast.warning("Revisar configuaración", {
+        description: "El monto a pagar supera el precio de cierre"
+        })
+        return false
+    }
+
     if (plan.deliveryDate < plan.lastPaymentDate) {
         toast.warning("Revisar configuaración", {
         description: "La fecha de la última cuota debe ser previa a la fecha de entrega"

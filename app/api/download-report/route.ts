@@ -16,7 +16,7 @@ export async function GET(request: Request) {
       `https://octopus-app-axggo.ondigitalocean.app/report?firebase_id=${encodeURIComponent(firebaseId)}`,
       {
         method: "GET",
-        signal: AbortSignal.timeout(60000), // 30 seconds timeout
+        signal: AbortSignal.timeout(120000), // 120 seconds timeout
       },
     )
 
