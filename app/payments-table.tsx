@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { 
@@ -25,12 +24,13 @@ import {
   type PaymentPlanQueryOptions 
 } from "@/services/payment-plan-service"
 import { formatNumber } from "@/lib/utils"
-import { ChevronLeft, ChevronRight, Edit, Eye, FileText, SortAsc, SortDesc } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Edit, Eye, SortAsc, SortDesc } from 'lucide-react'
 import type { PaymentPlan } from "@/types"
 import type { QueryDocumentSnapshot, DocumentData } from "firebase/firestore"
+import { toast } from "sonner"
+import {DownloadButton} from "@/components/report-download-btn"
 
 export default function PaymentPlansTable() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [plans, setPlans] = useState<(PaymentPlan & { id: string })[]>([])
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
@@ -77,18 +77,6 @@ export default function PaymentPlansTable() {
         sortDirection
       }
     })
-  }
-
-  const handleViewPlan = (id: string) => {
-    router.push(`/payment-plans/${id}`)
-  }
-
-  const handleEditPlan = (id: string) => {
-    router.push(`/payment-plans/${id}/edit`)
-  }
-
-  const handleGenerateReport = (id: string) => {
-    router.push(`/payment-plans/${id}/report`)
   }
 
   return (
@@ -185,7 +173,7 @@ export default function PaymentPlansTable() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleViewPlan(plan.id)}
+                        onClick={() => toast.error("Funcionalidad no disponible")}
                         title="Ver detalles"
                       >
                         <Eye className="h-4 w-4" />
@@ -193,19 +181,12 @@ export default function PaymentPlansTable() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleEditPlan(plan.id)}
+                        onClick={() => toast.error("Funcionalidad no disponible")}
                         title="Editar plan"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleGenerateReport(plan.id)}
-                        title="Generar reporte"
-                      >
-                        <FileText className="h-4 w-4" />
-                      </Button>
+                      <DownloadButton firebaseId={plan.id} />
                     </div>
                   </TableCell>
                 </TableRow>
