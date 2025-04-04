@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface PaymentPlan {
   client: string;
   project: string;
@@ -20,11 +22,13 @@ export interface PaymentPlan {
   lastPaymentDate: Date;
   frequency: string;
   payments: Payment[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface Payment {
   id: number
-  date: Date
+  date: Date | Timestamp
   ordinary: number
   extra: number
 }
