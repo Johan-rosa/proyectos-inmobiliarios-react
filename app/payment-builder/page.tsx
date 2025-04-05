@@ -75,12 +75,29 @@ export default function PaymentBuilder() {
     // Save to Firebase
     startTransition(async () => {
       try {
-        const planId = await savePaymentPlan(paymentPlanValues)
+        const firebaseId = await savePaymentPlan(paymentPlanValues)
+
+        fetch('/api/trigger-report', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ firebaseId }),
+        })
+        .catch(error => {
+          console.error('Error calling trigger-report API:', error);
+        });
 
         setPaymentPlanValues(defaultValues)
+
         toast.success("Plan de pago guardado", {
-          description: `Plan guardado con ID: ${planId}`,
+          description: `Plan guardado con ID: ${firebaseId}`,
         })
+
+        toast.info("Generando reporte", {
+          description: "El reporte se generará en segundo plano y estará disponible para descargar en la sección de reportes en unos segundos.",
+        })
+
       } catch (error) {
         console.error("Error saving payment plan:", error)
         toast.error("Error al guarder", {
