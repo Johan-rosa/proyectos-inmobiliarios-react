@@ -13,28 +13,21 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select"
-import { 
   getPaymentPlans, 
   type PaymentPlanQueryOptions 
 } from "@/services/payment-plan-service"
 import { formatNumber } from "@/lib/utils"
-import { ChevronLeft, ChevronRight, Edit, Eye, SortAsc, SortDesc } from 'lucide-react'
+import { Edit, Eye, Plus, Receipt } from 'lucide-react'
 import type { PaymentPlan } from "@/types"
 import type { QueryDocumentSnapshot, DocumentData } from "firebase/firestore"
 import { toast } from "sonner"
 import {DownloadButton} from "@/components/report-download-btn"
+import Link from "next/link"
 
 export default function PaymentPlansTable() {
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [plans, setPlans] = useState<(PaymentPlan & { id: string })[]>([])
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null)
-  const [hasMore, setHasMore] = useState(false)
   const [queryOptions, setQueryOptions] = useState<PaymentPlanQueryOptions>({
     pageSize: 10,
     sortBy: "createdAt",
@@ -58,7 +51,6 @@ export default function PaymentPlansTable() {
       
       setPlans(reset ? result.plans : [...plans, ...result.plans])
       setLastDoc(result.lastDoc)
-      setHasMore(result.hasMore)
     } catch (error) {
       console.error("Error loading payment plans:", error)
     } finally {
@@ -66,182 +58,66 @@ export default function PaymentPlansTable() {
     }
   }
 
-  const handleSort = (sortBy: PaymentPlanQueryOptions["sortBy"]) => {
-    setQueryOptions(prev => {
-      const sortDirection = 
-        prev.sortBy === sortBy && prev.sortDirection === "asc" ? "desc" : "asc"
-      
-      return {
-        ...prev,
-        sortBy,
-        sortDirection
-      }
-    })
-  }
-
   return (
     <div className="space-y-4">
-
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[180px]">
-                <div 
-                  className="flex items-center cursor-pointer"
-                  onClick={() => handleSort("client")}
-                >
-                  Cliente
-                  {queryOptions.sortBy === "client" && (
-                    queryOptions.sortDirection === "asc" 
-                      ? <SortAsc className="ml-1 h-4 w-4" /> 
-                      : <SortDesc className="ml-1 h-4 w-4" />
-                  )}
-                </div>
-              </TableHead>
-              <TableHead>
-                <div 
-                  className="flex items-center cursor-pointer"
-                  onClick={() => handleSort("project")}
-                >
-                  Proyecto
-                  {queryOptions.sortBy === "project" && (
-                    queryOptions.sortDirection === "asc" 
-                      ? <SortAsc className="ml-1 h-4 w-4" /> 
-                      : <SortDesc className="ml-1 h-4 w-4" />
-                  )}
-                </div>
-              </TableHead>
-              <TableHead className="text-right">
-                <div 
-                  className="flex items-center justify-end cursor-pointer"
-                  onClick={() => handleSort("price")}
-                >
-                  Precio
-                  {queryOptions.sortBy === "price" && (
-                    queryOptions.sortDirection === "asc" 
-                      ? <SortAsc className="ml-1 h-4 w-4" /> 
-                      : <SortDesc className="ml-1 h-4 w-4" />
-                  )}
-                </div>
-              </TableHead>
-              <TableHead className="hidden md:table-cell">
-                <div 
-                  className="flex items-center cursor-pointer"
-                  onClick={() => handleSort("createdAt")}
-                >
-                  Fecha
-                  {queryOptions.sortBy === "createdAt" && (
-                    queryOptions.sortDirection === "asc" 
-                      ? <SortAsc className="ml-1 h-4 w-4" /> 
-                      : <SortDesc className="ml-1 h-4 w-4" />
-                  )}
-                </div>
-              </TableHead>
-              <TableHead className="text-right">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading && plans.length === 0 ? (
+      {!plans && <PlansEmptyState />}
+      {plans && plans.length > 0 && (
+        <div className="overflow-hidden rounded-md border">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">
-                  Cargando planes de pago...
-                </TableCell>
+                <TableHead>Cliente</TableHead>
+                <TableHead>Proyecto</TableHead>
+                <TableHead>Precio</TableHead>
+                <TableHead>Unidad</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
-            ) : plans.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">
-                  No se encontraron planes de pago
-                </TableCell>
-              </TableRow>
-            ) : (
-              plans.map((plan) => (
+            </TableHeader>
+            <TableBody>
+              {plans.map((plan) => (
                 <TableRow key={plan.id}>
-                  <TableCell className="font-medium">{plan.client}</TableCell>
-                  <TableCell>
-                    {plan.project}
-                    {plan.unit && <span className="text-muted-foreground ml-1">({plan.unit})</span>}
-                  </TableCell>
+                  <TableCell>{plan.client}</TableCell>
+                  <TableCell>{plan.project}</TableCell>
+                  <TableCell>{plan.unit}</TableCell>
+                  <TableCell>{formatNumber(plan.price)}</TableCell>
                   <TableCell className="text-right">
-                    {plan.currency} {formatNumber(plan.price)}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {plan.createdAt ? format(plan.createdAt, "d MMM yyyy", { locale: es }) : "Fecha no disponible"}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => toast.error("Funcionalidad no disponible")}
-                        title="Ver detalles"
-                      >
+                    <Link href={`/payment-builder/${plan.id}`}>
+                      <Button variant="ghost" size="icon">
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => toast.error("Funcionalidad no disponible")}
-                        title="Editar plan"
-                      >
+                    </Link>
+                    <Link href={`/payment-builder/${plan.id}/edit`}>
+                      <Button variant="ghost" size="icon">
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <DownloadButton firebaseId={plan.id} />
-                    </div>
+                    </Link>
+                    {/* Add download button */}
+                    {/*<DownloadButton planId={plan.id} />*/}
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
-            Mostrar
-          </span>
-          <Select
-            value={queryOptions.pageSize?.toString()}
-            onValueChange={(value) => 
-              setQueryOptions(prev => ({ ...prev, pageSize: parseInt(value) }))
-            }
-          >
-            <SelectTrigger className="w-[70px]">
-              <SelectValue placeholder="10" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="5">5</SelectItem>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="20">20</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-            </SelectContent>
-          </Select>
-          <span className="text-sm text-muted-foreground">
-            por página
-          </span>
+              ))}
+            </TableBody>
+          </Table>
         </div>
+      )}
+    </div>
+  )
+}
 
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => loadPaymentPlans(true)}
-            disabled={isLoading || plans.length === 0}
-          >
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => loadPaymentPlans()}
-            disabled={isLoading || !hasMore}
-          >
-            Siguiente
-            <ChevronRight className="h-4 w-4 ml-1" />
-          </Button>
+const PlansEmptyState = () => {
+  return (
+    <div className="mt-24 flex items-center justify-center h-full w-full">
+      <div className="mx-auto max-w-2xl w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+        <div className="flex flex-col items-center justify-center">
+          <Receipt className="mx-auto h-12 w-12 text-gray-400" strokeWidth={1.5} />
+          <span className="mt-4 block text-sm font-semibold text-gray-900">No se has creado ningún plan de pago</span>
+          <p className="mt-1 text-sm text-gray-500">Crea tu primer plan de pago.</p>
+          <Link href="/payment-builder" className="mt-6">
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Crear plan de pago
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
