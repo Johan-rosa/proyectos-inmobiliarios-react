@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useCallback, useTransition} from "react"
-import { Button } from "@/components/ui/button"
 import { PageHeader } from "@/components/app-header"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import PaymentBuilderInputs from "./payment-builder-inputs"
@@ -10,6 +9,7 @@ import SummaryBanner from "./payment-summary-banner"
 import { toast } from "sonner"
 import { savePaymentPlan } from "@/services/payment-plan-service"
 import { validatePaymentConfiguration } from "./validate-payment-configuration"
+import { SaveDiscardButtons, ConfirmationDialog, DiscardDialog } from "./payment-confirmation"
 
 import type { Payment } from "@/types"
 
@@ -40,8 +40,10 @@ const defaultValues = {
 export default function PaymentBuilder() {
   const [paymentPlanValues, setPaymentPlanValues] = useState(defaultValues)
   
-    // State for loading indicators
-    const [isPending, startTransition] = useTransition()
+  // State for loading indicators
+  const [isPending, startTransition] = useTransition()
+  const [isConfirmationDialogOpen, setConfirmationIsDialogOpen] = useState(false)
+  const [isDiscardDialogOpen, setDiscardIsDialogOpen] = useState(false)
 
   const bannerStats = [
     { id: 1, name: "Precio de cierre", value: paymentPlanValues.price },
@@ -89,6 +91,7 @@ export default function PaymentBuilder() {
         });
 
         setPaymentPlanValues(defaultValues)
+        setConfirmationIsDialogOpen(false)
 
         toast.success("Plan de pago guardado", {
           description: `Plan guardado con ID: ${firebaseId}`,
@@ -111,6 +114,7 @@ export default function PaymentBuilder() {
   const handleDiscard = () => {
     // Reset to default values
     setPaymentPlanValues(defaultValues)
+    setDiscardIsDialogOpen(false)
 
     toast.success("Cambios descartados", {
       description: "Se han descartado todos los cambios",
@@ -122,11 +126,12 @@ export default function PaymentBuilder() {
       <PageHeader>
         <div className="w-full h-auto flex flex-wrap items-center justify-between p-2">
           <h1 className="text-xl font-medium">Crear plan de pago</h1>
-          <div className="lg:flex flex-wrap gap-2 hidden">
-            <Button variant="secondary" onClick={handleDiscard}>Descartar</Button>
-            <Button onClick={handleSavePaymentPlan} disabled={isPending}>
-              {isPending ? "Guardando..." : "Guardar"}
-            </Button>
+          <div className="hidden sm:block">
+            <SaveDiscardButtons
+              isPending={isPending}
+              toggleConfirmDialog={() => setConfirmationIsDialogOpen(true)}
+              toggleDiscardDialog={() => setDiscardIsDialogOpen(true)}
+            />
           </div>
         </div>
       </PageHeader>
@@ -156,14 +161,29 @@ export default function PaymentBuilder() {
               setPayments={handlePaymentsChange}
               payments={paymentPlanValues.payments}
             />
-            <div className="lg:hidden mt-4 flex content-end w-full flex-wrap gap-2">
-              <Button variant="secondary" onClick={handleDiscard}>Descartar</Button>
-              <Button onClick={handleSavePaymentPlan} disabled={isPending}>
-                {isPending ? "Guardando..." : "Guardar"}
-              </Button>
-            </div>
           </TabsContent>
         </Tabs>
+        <div className="sm:hidden block bg-gray-100 p-3 rounded-m mt-3">
+          <SaveDiscardButtons
+            className="flex-wrap"
+            childClassName="w-full"
+
+            toggleConfirmDialog={() => setConfirmationIsDialogOpen(true)}
+            toggleDiscardDialog={() => setDiscardIsDialogOpen(true)}
+          />  
+        </div>
+        <ConfirmationDialog
+          open={isConfirmationDialogOpen}
+          onOpenChange={() => setConfirmationIsDialogOpen(false)}
+          onConfirm={handleSavePaymentPlan}
+          values={paymentPlanValues}
+        />
+        <DiscardDialog
+          open={isDiscardDialogOpen}
+          onOpenChange={() => setDiscardIsDialogOpen(false)}
+          onDiscard={handleDiscard}
+          values={paymentPlanValues}
+        />
       </div>
 
       <div className="p-2 hidden xl:grid grid-cols-[auto_1fr] gap-6 ">
