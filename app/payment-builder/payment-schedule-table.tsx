@@ -47,7 +47,6 @@ export default function PaymentSchedule({
   // Generate payment schedule when inputs change
   useEffect(() => {
     generatePaymentSchedule()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstPaymentDate, frequency, cealingPayment, totalToPay])
 
   // Sync local payments with parent when parent payments change
@@ -55,7 +54,6 @@ export default function PaymentSchedule({
     if (payments.length > 0 && JSON.stringify(payments) !== JSON.stringify(localPayments)) {
       setLocalPayments(payments)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [payments])
 
   // Sync parent payments with local when local payments change
@@ -63,7 +61,6 @@ export default function PaymentSchedule({
     if (localPayments.length > 0 && JSON.stringify(localPayments) !== JSON.stringify(payments)) {
       setPayments(localPayments)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localPayments, setPayments])
 
   const generatePaymentSchedule = () => {

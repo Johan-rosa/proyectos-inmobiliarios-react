@@ -44,7 +44,6 @@ export default function PaymentPlansTable() {
   // Load payment plans
   useEffect(() => {
     loadPaymentPlans()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryOptions])
 
   const loadPaymentPlans = async (reset = false) => {
