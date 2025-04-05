@@ -33,6 +33,7 @@ function PaymentBuilderInputs({ values, exportValues }: PaymentBuilderInputsProp
     if (JSON.stringify(values) !== JSON.stringify(formInputs)) {
       setFormInputs(values)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values])
 
   // Export values when local state changes
