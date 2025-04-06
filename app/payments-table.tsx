@@ -222,7 +222,7 @@ export default function PaymentPlanTable() {
                             })}
                           </span>
                           <span className="text-xs text-muted-foreground/70">
-                            ({(plan.reservationPercent * 100).toFixed(0)}%)
+                            ({(plan.reservationSignatuerPercent).toFixed(1)}%)
                           </span>
                         </div>
                       </div>
@@ -244,7 +244,7 @@ export default function PaymentPlanTable() {
                             })}
                           </span>
                           <span className="text-xs text-muted-foreground/70">
-                            ({(plan.duringConstructionPercent * 100).toFixed(0)}%)
+                            ({(plan.duringConstructionPercent).toFixed(1)}%)
                           </span>
                         </div>
                       </div>
@@ -266,7 +266,7 @@ export default function PaymentPlanTable() {
                             })}
                           </span>
                           <span className="text-xs text-muted-foreground/70">
-                            ({(plan.atDeliveryPercent * 100).toFixed(0)}%)
+                            ({(plan.atDeliveryPercent).toFixed(1)}%)
                           </span>
                         </div>
                       </div>

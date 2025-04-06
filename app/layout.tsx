@@ -37,7 +37,7 @@ export default function RootLayout({
           <main className="w-full">
             {children}
           </main>
-          <Toaster richColors />
+          <Toaster richColors expand={true} />
         </SidebarProvider>
       </body>
     </html>
