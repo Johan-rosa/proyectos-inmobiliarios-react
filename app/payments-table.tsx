@@ -496,7 +496,7 @@ export function CardSkeleton() {
   return (
     <div className="md:hidden space-y-4">
       {Array.from({ length: 3 }).map((_, index) => (
-        <Card key={index} className="overflow-hidden">
+        <Card key={index} className="overflow-hidden p-1 rounded-md gap-2">
           <CardContent className="p-4">
             <div className="flex justify-between">
               <div className="space-y-2">
