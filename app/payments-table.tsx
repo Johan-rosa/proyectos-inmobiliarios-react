@@ -180,9 +180,9 @@ export default function PaymentPlanTable() {
         {plans.map((plan) => (
           <Card
             key={plan.id}
-            className={cn("overflow-hidden transition-colors", expandedRows[plan.id] ? "border-primary/30" : "")}
+            className={cn("overflow-hidden transition-colors p-1 rounded-md gap-2", expandedRows[plan.id] ? "border-primary/30" : "")}
           >
-            <CardContent className="p-4">
+            <CardContent className="p-3">
               <div className="flex justify-between">
                 <div className="space-y-1">
                   <h3 className="font-medium">{plan.client}</h3>
