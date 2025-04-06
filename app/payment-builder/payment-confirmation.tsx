@@ -42,7 +42,7 @@ export function PaymentItem({ icon, label, amount, currency, percentage, showPer
           })}
         </span>
         {showPercentage && percentage !== undefined && (
-          <span className="ml-1 text-sm font-semibold text-gray-500">({(percentage * 100).toFixed(1)} %)</span>
+          <span className="ml-1 text-sm font-semibold text-gray-500">({(percentage).toFixed(1)} %)</span>
         )}
       </dd>
     </div>
@@ -68,7 +68,7 @@ export function PaymentPlanDescription({ values, className }: { values: PaymentP
           label="Reserva y firma"
           amount={values.signature + values.reservation}
           currency={values.currency}
-          percentage={values.reservationPercent}
+          percentage={values.reservationSignatuerPercent}
         />
         <PaymentItem
           icon={<BrickWall className="h-5 w-5 text-gray-400" />}
