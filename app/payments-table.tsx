@@ -11,7 +11,7 @@ import {
   TableRow 
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { formatDate } from "@/lib/utils"
+import { formatDate, createPpaymentPlanName } from "@/lib/utils"
 import {DownloadButton} from "@/components/report-download-btn"
 import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
@@ -31,6 +31,8 @@ import {
 } from "@/services/payment-plan-service"
 import type { PaymentPlan } from "@/types"
 import type { QueryDocumentSnapshot, DocumentData } from "firebase/firestore"
+import { toast } from "sonner"
+
 
 export default function PaymentPlanTable() {
   const [isMobile, setIsMobile] = useState(false)
@@ -136,30 +138,7 @@ export default function PaymentPlanTable() {
                     })}
                   </TableCell>
                   <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                          <Link href={`/payment-builder/${plan.id}`} className="flex items-center">
-                            <Eye className="mr-2 h-4 w-4" />
-                            <span>Ver detalles</span>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href={`/payment-builder/${plan.id}/edit`} className="flex items-center">
-                            <Edit className="mr-2 h-4 w-4" />
-                            <span>Editar</span>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <DownloadButton firebaseId={plan.id}/>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                  <PaymentPlanDropdownActions planId={plan.id} reportName={createPpaymentPlanName(plan.client, plan.project, plan.unit)} />
                   </TableCell>
                 </TableRow>
                 {expandedRows[plan.id] && (
@@ -202,30 +181,7 @@ export default function PaymentPlanTable() {
                       currency: plan.currency,
                     })}
                   </p>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 mt-1">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem asChild>
-                        <Link href={`/payment-builder/${plan.id}`} className="flex items-center">
-                          <Eye className="mr-2 h-4 w-4" />
-                          <span>Ver detalles</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href={`/payment-builder/${plan.id}/edit`} className="flex items-center">
-                          <Edit className="mr-2 h-4 w-4" />
-                          <span>Editar</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <DownloadButton firebaseId={plan.id}/>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <PaymentPlanDropdownActions planId={plan.id} reportName={createPpaymentPlanName(plan.client, plan.project, plan.unit)} />
                 </div>
               </div>
             </CardContent>
@@ -327,6 +283,50 @@ export default function PaymentPlanTable() {
         ))}
       </div>
     </>
+  )
+}
+
+type PaymentPlanDropdownActionsProps = {
+  planId: string,
+  reportName?: string,
+}
+
+
+function PaymentPlanDropdownActions ({ planId, reportName}: PaymentPlanDropdownActionsProps) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" className="h-8 mt-1">
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem asChild>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="w-full justify-start hover:border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            onClick={() => toast.warning("Esta función no está disponible aún.")}
+          >
+            <Eye className="mr-2 h-4 w-4" /> <span>Editar</span>
+          </Button>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="w-full justify-start hover:border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            onClick={() => toast.warning("Esta función no está disponible aún.")}
+          >
+            <Edit className="mr-2 h-4 w-4" />
+            <span>Editar</span>
+          </Button>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <DownloadButton firebaseId={planId} label="Descargar" className="w-full justify-start" reportName={reportName} />
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 

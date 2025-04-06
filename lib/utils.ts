@@ -24,3 +24,7 @@ export function formatDate(dateInput?: string | Date): string {
     year: "numeric",
   }).format(date);
 }
+
+export function createPpaymentPlanName(client: string, proyect: string, unit: string) {
+  return `${client || "Plan de Pago"} -  ${proyect || ""} - ${unit || "empty"}.pdf`;
+}
