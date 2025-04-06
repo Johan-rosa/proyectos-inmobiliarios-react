@@ -32,7 +32,7 @@ export interface PaymentPlanWithID extends PaymentPlan {
 
 export interface Payment {
   id: number
-  date: Date | Timestamp
+  date: Date | Timestamp | string
   ordinary: number
   extra: number
 }

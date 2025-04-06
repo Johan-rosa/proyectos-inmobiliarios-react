@@ -56,27 +56,27 @@ interface FirestorePaymentPlan {
 
 // Helper function to convert dates to Firestore format
 const preparePaymentPlanForFirestore = (paymentPlan: PaymentPlan): FirestorePaymentPlan => {
-  // Create a copy to avoid mutating the original
   const planForFirestore: Partial<FirestorePaymentPlan> = { 
     ...paymentPlan,
-    // Convert Date objects to timestamps
-    deliveryDate: Timestamp.now(),
-    reservationDate: Timestamp.now(),
-    signatureDate: Timestamp.now(),
-    firstPaymentDate: Timestamp.now(),
-    lastPaymentDate: Timestamp.now(),
-    
-    // Convert dates in payments array
+    deliveryDate: Timestamp.fromDate(new Date(paymentPlan.deliveryDate)),
+    reservationDate: Timestamp.fromDate(new Date(paymentPlan.reservationDate)),
+    signatureDate: Timestamp.fromDate(new Date(paymentPlan.signatureDate)),
+    firstPaymentDate: Timestamp.fromDate(new Date(paymentPlan.firstPaymentDate)),
+    lastPaymentDate: Timestamp.fromDate(new Date(paymentPlan.lastPaymentDate)),
+
     payments: paymentPlan.payments.map(payment => ({
       ...payment,
-      date: Timestamp.now()
+      date: Timestamp.fromDate(
+        payment.date instanceof Timestamp 
+          ? payment.date.toDate() 
+          : new Date(payment.date)
+      ),
     })),
-    
-    // Add metadata
+
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   };
-  
+
   return planForFirestore as FirestorePaymentPlan;
 };
 
