@@ -4,14 +4,17 @@ import { useState } from "react"
 import { Download, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-
 interface DownloadButtonProps {
   firebaseId: string
   label?: string
+  reportName?: string
+  className?: string
 }
 
-export function DownloadButton({ firebaseId, label }: DownloadButtonProps) {
+export function DownloadButton({ firebaseId, label, reportName, className}: DownloadButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const icon = isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />
+  const buttonLabel = label ? <>{icon} <span>{label}</span></>  : icon
 
   const handleDownload = async () => {
     setIsLoading(true)
@@ -31,7 +34,7 @@ export function DownloadButton({ firebaseId, label }: DownloadButtonProps) {
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = label ? `${label}.pdf` : "report.pdf"
+      a.download = reportName ? `${reportName}.pdf` : "plan-de-pago.pdf"
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
@@ -54,8 +57,9 @@ export function DownloadButton({ firebaseId, label }: DownloadButtonProps) {
       size="icon"
       aria-label={label ? `Download ${label}` : "Download report"}
       title={label ? `Download ${label}` : "Download report"}
+      className={className}
     >
-      {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+      {buttonLabel}
     </Button>
   )
 }

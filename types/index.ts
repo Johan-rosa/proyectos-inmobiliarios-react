@@ -26,6 +26,10 @@ export interface PaymentPlan {
   updatedAt?: Date;
 }
 
+export interface PaymentPlanWithID extends PaymentPlan {
+  id: string;
+}
+
 export interface Payment {
   id: number
   date: Date | Timestamp
