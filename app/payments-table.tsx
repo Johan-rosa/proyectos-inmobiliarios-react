@@ -234,7 +234,7 @@ export function PaymentPlanDropdownActions({ planId, reportName, creationTime }:
             label="Descargar"
             className="w-full justify-start"
             reportName={reportName}
-            creationTime={creationTime}
+            creationTime={creationTime || new Date()}
           />
         </DropdownMenuItem>
       </DropdownMenuContent>
