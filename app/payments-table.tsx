@@ -363,7 +363,7 @@ export function PaymentItems({ plan, compact = false }: { plan: PaymentPlanWithI
         title="Reserva y firma"
         amount={plan.signature + plan.reservation}
         currency={plan.currency}
-        percentage={plan.reservationSignatuerPercent || plan.reservationPercent * 100}
+        percentage={plan.reservationSignatuerPercent }
         compact={compact}
       />
 
@@ -372,7 +372,7 @@ export function PaymentItems({ plan, compact = false }: { plan: PaymentPlanWithI
         title="En cuotas"
         amount={plan.duringConstruction}
         currency={plan.currency}
-        percentage={plan.duringConstructionPercent * 100 || plan.duringConstructionPercent}
+        percentage={plan.duringConstructionPercent }
         compact={compact}
       />
 
@@ -381,7 +381,7 @@ export function PaymentItems({ plan, compact = false }: { plan: PaymentPlanWithI
         title="Contra entrega"
         amount={plan.atDelivery}
         currency={plan.currency}
-        percentage={plan.atDeliveryPercent * 100 || plan.atDeliveryPercent}
+        percentage={plan.atDeliveryPercent}
         compact={compact}
       />
     </div>
