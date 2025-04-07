@@ -14,8 +14,7 @@ import CustomNumberInput from "@/components/custom-number-input"
 import type { Payment } from "@/types"
 import { Separator } from "@/components/ui/separator"
 import { formatNumber } from "@/lib/utils"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { DialogCuotaDeseada } from "./dialog-cuota-deseada"
 
 const defaultValues = {
   client: "",
@@ -265,27 +264,4 @@ export default function PaymentBuilder() {
       </div>
     </>
   )
-}
-
-interface DialogCuotaDeseadaProps {
-  children: React.ReactNode;
-}
-
-export function DialogCuotaDeseada({ children }: DialogCuotaDeseadaProps) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className=" mt-3 w-full" variant="outline">Calcular deseada</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Cuál es la cuota deseada</DialogTitle>
-          <DialogDescription>
-            In troducir la cuota deseada y la cantidad de pago extraordinarios.
-          </DialogDescription>
-        </DialogHeader>
-        <div>{children}</div>
-      </DialogContent>
-    </Dialog>
-  );
 }
