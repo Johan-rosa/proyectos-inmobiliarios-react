@@ -22,7 +22,7 @@ export function DownloadButton({ firebaseId, label, reportName, className, creat
     const now = new Date()
     const diffInSeconds = (now.getTime() - createdAt.getTime()) / 1000
 
-    if (diffInSeconds < 70) {
+    if (diffInSeconds < 40) {
       toast.warning("El reporte aún no está listo", {
         description: "Por favor, intentar más tarde",
       })
