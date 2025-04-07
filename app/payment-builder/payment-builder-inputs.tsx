@@ -221,7 +221,7 @@ function PaymentBuilderInputs({ values, exportValues }: PaymentBuilderInputsProp
       </div>
       <DatePicker
         label="Fecha de entrega"
-        value={formInputs.deliveryDate}
+        value={formInputs.deliveryDate || new Date("2023-01-01")}
         onChange={(date) => {
           if (date instanceof Date) {
             setFormInputs({ ...formInputs, deliveryDate: date })
@@ -374,7 +374,7 @@ function PaymentBuilderInputs({ values, exportValues }: PaymentBuilderInputsProp
         />
         <CustomNumberInput
           label="% contra entrega"
-          id="during-construction-percentage"
+          id="at-delivery-percentage"
           value={formInputs.atDeliveryPercent.toFixed(2)}
           allowDecimals={true}
           decimalPlaces={2}
