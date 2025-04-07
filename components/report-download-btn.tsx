@@ -22,9 +22,9 @@ export function DownloadButton({ firebaseId, label, reportName, className, creat
     const now = new Date()
     const diffInSeconds = (now.getTime() - createdAt.getTime()) / 1000
 
-    if (diffInSeconds < 60) {
+    if (diffInSeconds < 90) {
       toast.warning("El reporte aún no está listo", {
-        description: "Por favor, espera unos segundos antes de intentar descargarlo.",
+        description: "Por favor, intentar más tarde",
       })
       return
     }
@@ -32,14 +32,14 @@ export function DownloadButton({ firebaseId, label, reportName, className, creat
     setIsLoading(true)
 
     toast.info("Descargando el plan de pago", {
-      description: "Si es la primera vez que descargas el reporte, puede tardar varios segundos.",
+      description: "La descarga comenzó, por favor espera",
     })
 
     try {
       const response = await fetch(`/api/download-report?firebaseId=${encodeURIComponent(firebaseId)}`)
 
       if (!response.ok) {
-        throw new Error("Failed to download report")
+        throw new Error("Failed to download report, favor contactar al soporte")
       }
 
       const blob = await response.blob()
@@ -55,7 +55,7 @@ export function DownloadButton({ firebaseId, label, reportName, className, creat
       toast.success("Descarga completa")
     } catch (error) {
       console.error("Download error:", error)
-      toast.error("La descarga falló. Por favor, intenta nuevamente.")
+      toast.error("La descarga falló. Por favor, intenta nuevamente en unos segundo.")
     } finally {
       setIsLoading(false)
     }
