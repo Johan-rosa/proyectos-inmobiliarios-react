@@ -176,6 +176,7 @@ export function PlanTableRow({ plan, isExpanded, onToggle }: PlanTableRowProps) 
         <TableCell className="text-right">
           <PaymentPlanDropdownActions
             planId={plan.id}
+            creationTime={plan.createdAt}
             reportName={createPpaymentPlanName(plan.client, plan.project, plan.unit)}
           />
         </TableCell>
@@ -194,9 +195,10 @@ export function PlanTableRow({ plan, isExpanded, onToggle }: PlanTableRowProps) 
 type PaymentPlanDropdownActionsProps = {
   planId: string
   reportName?: string
+  creationTime?: string | Date
 }
 
-export function PaymentPlanDropdownActions({ planId, reportName }: PaymentPlanDropdownActionsProps) {
+export function PaymentPlanDropdownActions({ planId, reportName, creationTime }: PaymentPlanDropdownActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -232,6 +234,7 @@ export function PaymentPlanDropdownActions({ planId, reportName }: PaymentPlanDr
             label="Descargar"
             className="w-full justify-start"
             reportName={reportName}
+            creationTime={creationTime || new Date()}
           />
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -302,6 +305,7 @@ export function PlanCard({ plan, isExpanded, onToggle }: PlanCardProps) {
             </p>
             <PaymentPlanDropdownActions
               planId={plan.id}
+              creationTime={plan.createdAt}
               reportName={createPpaymentPlanName(plan.client, plan.project, plan.unit)}
             />
           </div>
