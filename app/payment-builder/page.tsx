@@ -10,8 +10,11 @@ import { toast } from "sonner"
 import { savePaymentPlan } from "@/services/payment-plan-service"
 import { validatePaymentConfiguration } from "./validate-payment-configuration"
 import { SaveDiscardButtons, ConfirmationDialog, DiscardDialog } from "./payment-confirmation"
-
+import CustomNumberInput from "@/components/custom-number-input"
 import type { Payment } from "@/types"
+import { Separator } from "@/components/ui/separator"
+import { formatNumber } from "@/lib/utils"
+import { DialogCuotaDeseada } from "./dialog-cuota-deseada"
 
 const defaultValues = {
   client: "",
@@ -39,6 +42,27 @@ const defaultValues = {
 
 export default function PaymentBuilder() {
   const [paymentPlanValues, setPaymentPlanValues] = useState(defaultValues)
+  const [nCuotasExtra, setnCuotasExtra] = useState(2)
+  const [cuotaDeseada, setCuotaDeseada] = useState(0)
+
+  const CalculoCuotaDeseada = () => {
+    const duringConstruction = paymentPlanValues.duringConstruction
+    const nCuotas = paymentPlanValues.payments.length
+    const excedente = duringConstruction - nCuotas * cuotaDeseada
+    const cuotaExtra = excedente / nCuotasExtra
+
+    if (cuotaDeseada == 0 || nCuotasExtra <= 0) return
+    if (excedente < 0) {
+      return <p className="text-color-gray-400 text-sm my-2">{`La cuota deseada excedería el monto a pagar durante la construcción`}</p>
+    }
+
+    return (
+      <p className="mb-4 text-color-gray-400 text-sm my-2">
+        {`Para lograr una cutoa de ${formatNumber(cuotaDeseada)} se deben aportar ${formatNumber(excedente)} 
+        extra: ${nCuotasExtra} pagos de ${formatNumber(cuotaExtra, )} cada uno`}
+      </p>
+    )
+  }
   
   // State for loading indicators
   const [isPending, startTransition] = useTransition()
@@ -121,6 +145,7 @@ export default function PaymentBuilder() {
     })
   }
 
+
   return (
     <>
       <PageHeader>
@@ -161,6 +186,21 @@ export default function PaymentBuilder() {
               setPayments={handlePaymentsChange}
               payments={paymentPlanValues.payments}
             />
+            <DialogCuotaDeseada>
+              <div className="flex gap-2">
+                <CustomNumberInput
+                  id="cuota-deseada-m"
+                  label="Cuota deseada" 
+                  value={cuotaDeseada.toFixed(1)} onChange={(value) => setCuotaDeseada(Number.parseFloat(value))}
+                />
+                <CustomNumberInput 
+                  id="nCuotasExtra-m"
+                  label="Cantidad de pagos extra" 
+                  value={nCuotasExtra} onChange={(value) => setnCuotasExtra(Number.parseFloat(value))}
+                />
+              </div>
+              <CalculoCuotaDeseada />
+            </DialogCuotaDeseada>
           </TabsContent>
         </Tabs>
         <div className="sm:hidden block bg-gray-100 p-3 rounded-m mt-3">
@@ -206,6 +246,20 @@ export default function PaymentBuilder() {
             setPayments={handlePaymentsChange}
             payments={paymentPlanValues.payments}
           />
+          <Separator /> 
+          <div className="flex gap-2">
+            <CustomNumberInput
+              id="cuota-deseada"
+              label="Cuota deseada" 
+              value={cuotaDeseada.toFixed(1)} onChange={(value) => setCuotaDeseada(Number.parseFloat(value))}
+            />
+            <CustomNumberInput
+              id="nCuotasExtra"
+              label="Cantidad de pagos extra" 
+              value={nCuotasExtra} onChange={(value) => setnCuotasExtra(Number.parseFloat(value))}
+            />
+          </div>
+          <CalculoCuotaDeseada />
         </div>
       </div>
     </>
