@@ -1,0 +1,122 @@
+[
+  {
+    "id_proyecto": 405289,
+    "nombre_proyecto": "Biltmore XVI",
+    "sector": "Naco",
+    "anio_entrega": 2023,
+    "condicion": "Construccion",
+    "lat": 18.4679,
+    "lng": -69.9274,
+    "link": "https://maps.app.goo.gl/ytM5bqg1EnHWxtwZ7",
+    "zona": "Polígono Central",
+    "img": "405289.jpg"
+  },
+  {
+    "id_proyecto": 405310,
+    "nombre_proyecto": "Britney V",
+    "sector": "Naco",
+    "anio_entrega": 2022,
+    "condicion": "Listo",
+    "lat": 18.4719,
+    "lng": -69.9222,
+    "link": "https://maps.app.goo.gl/8wCkhuAWYvg58WrZ9",
+    "zona": "Polígono Central",
+    "img": "405310.jpeg"
+  },
+  {
+    "id_proyecto": 406222,
+    "nombre_proyecto": "MIRAGE RESIDENCE",
+    "sector": "Naco",
+    "anio_entrega": 2024,
+    "condicion": "Construccion",
+    "lat": 18.4725,
+    "lng": -69.9205,
+    "link": "https://maps.app.goo.gl/eCWSybqdYqo2YKpx5",
+    "zona": "Polígono Central",
+    "img": "406222.jpg"
+  },
+  {
+    "id_proyecto": 406235,
+    "nombre_proyecto": "Rubi Naco",
+    "sector": "Naco",
+    "anio_entrega": 2022,
+    "condicion": "Construccion",
+    "lat": 18.4801,
+    "lng": -69.9262,
+    "link": "https://maps.app.goo.gl/zw8rT9z8NxV7AvRA9",
+    "zona": "Polígono Central",
+    "img": "406235.jpeg"
+  },
+  {
+    "id_proyecto": 406363,
+    "nombre_proyecto": "Aitana Suites",
+    "sector": "Naco",
+    "anio_entrega": 2024,
+    "condicion": "Construccion",
+    "lat": 18.4789,
+    "lng": -69.9304,
+    "link": "https://maps.app.goo.gl/89pYKT9wZZkPxuQG8",
+    "zona": "Polígono Central",
+    "img": "406363.jpg"
+  },
+  {
+    "id_proyecto": 406484,
+    "nombre_proyecto": "Ocho Tree Tower",
+    "sector": "Naco",
+    "anio_entrega": 2024,
+    "condicion": "Construccion",
+    "lat": 18.4762,
+    "lng": -69.9258,
+    "link": "https://maps.app.goo.gl/cKVWVrZQKW3VdVmy5",
+    "zona": "Polígono Central",
+    "img": ""
+  },
+  {
+    "id_proyecto": 407037,
+    "nombre_proyecto": "TORRE SAVAL IV",
+    "sector": "Naco",
+    "anio_entrega": 2023,
+    "condicion": "Construccion",
+    "lat": 18.476,
+    "lng": -69.9241,
+    "link": "https://maps.app.goo.gl/TCYsWkB161LzNDkH7",
+    "zona": "Polígono Central",
+    "img": ""
+  },
+  {
+    "id_proyecto": 407941,
+    "nombre_proyecto": "AKRA TOWER",
+    "sector": "Naco",
+    "anio_entrega": 2024,
+    "condicion": "Construccion",
+    "lat": 18.4754,
+    "lng": -69.9221,
+    "link": "https://maps.app.goo.gl/mpkWzn2jkGE3TjL6A",
+    "zona": "Polígono Central",
+    "img": ""
+  },
+  {
+    "id_proyecto": 410298,
+    "nombre_proyecto": "Liberty Place",
+    "sector": "Naco",
+    "anio_entrega": 2026,
+    "condicion": "Construccion",
+    "lat": 18.4778,
+    "lng": -69.9312,
+    "link": "https://maps.app.goo.gl/FdU26u5xeRJMA4Bt9",
+    "zona": "Polígono Central",
+    "img": "410298.jpeg"
+  },
+  {
+    "id_proyecto": 412671,
+    "nombre_proyecto": "ONZE LUXURY SUITES",
+    "sector": "Naco",
+    "anio_entrega": 2024,
+    "condicion": "Construccion",
+    "lat": 18.4704,
+    "lng": -69.924,
+    "link": "https://maps.app.goo.gl/UirgTF1S6mvrhduKA",
+    "zona": "Polígono Central",
+    "img": "412671.jpeg"
+  }
+]

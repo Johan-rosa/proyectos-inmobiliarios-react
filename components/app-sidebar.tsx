@@ -21,7 +21,7 @@ const items = [
   },
   {
     title: "Mapa de proyectos",
-    url: "#",
+    url: "/proyectos",
     icon: Map,
   },
 ]
