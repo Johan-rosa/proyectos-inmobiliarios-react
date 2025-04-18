@@ -39,11 +39,11 @@ function getAmenityIcon(amenity: string) {
 const ProjectCard = ({ project } : ProjectCardProps) => {
   return (
     <Card className="p-0 pb-3 gap-2 overflow-hidden h-full transition-all hover:shadow-md m-2" >
-      <div className="relative min-h-80  w-full">
+      <div className="relative aspect-video min-h-80  w-full">
         <Image 
           src={`/project-imgs${project.image}`} 
           alt={project.title} fill 
-          className="object-fit object-center"
+          className="object-fit md:object-cover object-center"
         />
         <div className="absolute top-2 right-2">
           <Badge className="bg-emerald-600 hover:bg-emerald-700">${project.price.toLocaleString()}</Badge>
