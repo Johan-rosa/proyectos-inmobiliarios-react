@@ -15,10 +15,23 @@ import {
  } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { PageHeader } from "@/components/app-header"
-import PropertyMap from "@/components/projects-ui/project-map"
+// import PropertyMap from "@/components/projects-ui/project-map"
+import NearbyPlaces from "@/components/projects-ui/project-map-places"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { use, useState} from "react"
+import type { PlaceType } from "@/types"
+import { Search } from "lucide-react"
 
-export default function ProjectDetails({ params }: { params: { id: string } }) {
-  const project = projects.find((p) => p.id === params.id)
+
+export default function ProjectDetails({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
+  const project = projects.find((p) => p.id === id)
+
+  const [placeType, setPlaceType] = useState<PlaceType>("restaurant")
+  const [searchRadius, setSearchRadius] = useState<number>(1000) // 1km default
+  const [searchKeyword, setSearchKeyword] = useState<string>("")
 
   if (!project) return <h1>sorry</h1>
 
@@ -118,7 +131,69 @@ export default function ProjectDetails({ params }: { params: { id: string } }) {
           </section >
 
           <section className="mt-3 w-full h-[500px] lg:h-[700px] rounded-md overflow-hidden">
-            <PropertyMap lat={project.latitude} lng={project.longitude} zoom={15} showPlaces={false} />
+            <div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div className="flex flex-col space-y-2">
+                  <label htmlFor="place-type" className="text-sm font-medium">
+                    Tipo de Lugar
+                  </label>
+                  <Select value={placeType} onValueChange={(value) => setPlaceType(value as PlaceType)}>
+                    <SelectTrigger id="place-type">
+                      <SelectValue placeholder="Seleccionar tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="restaurant">Restaurantes</SelectItem>
+                      <SelectItem value="supermarket">Supermercados</SelectItem>
+                      <SelectItem value="school">Escuelas</SelectItem>
+                      <SelectItem value="park">Parques</SelectItem>
+                      <SelectItem value="shopping_mall">Centros Comerciales</SelectItem>
+                      <SelectItem value="hospital">Hospitales</SelectItem>
+                      <SelectItem value="gym">Gimnasios</SelectItem>
+                      <SelectItem value="transit_station">Estaciones de Transporte</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-col space-y-2">
+                  <label htmlFor="search-radius" className="text-sm font-medium">
+                    Radio de Búsqueda (metros)
+                  </label>
+                  <Select
+                    value={searchRadius.toString()}
+                    onValueChange={(value) => setSearchRadius(Number.parseInt(value))}
+                  >
+                    <SelectTrigger id="search-radius">
+                      <SelectValue placeholder="Seleccionar radio" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="500">500m</SelectItem>
+                      <SelectItem value="1000">1km</SelectItem>
+                      <SelectItem value="2000">2km</SelectItem>
+                      <SelectItem value="5000">5km</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-col space-y-2">
+                  <label htmlFor="keyword" className="text-sm font-medium">
+                    Palabra Clave (opcional)
+                  </label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="keyword"
+                      placeholder="ej., orgánico, café, etc."
+                      value={searchKeyword}
+                      onChange={(e) => setSearchKeyword(e.target.value)}
+                    />
+                    <Button variant="outline" size="icon">
+                      <Search className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            { /* <PropertyMap lat={project.latitude} lng={project.longitude} zoom={15} showPlaces={false} /> */}
+            <NearbyPlaces lat={project.latitude} lng={project.longitude} placeType="restaurant" radius={500} />
           </section>
         </main>
       </div>
