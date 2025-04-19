@@ -15,6 +15,7 @@ import {
  } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { PageHeader } from "@/components/app-header"
+import PropertyMap from "@/components/projects-ui/project-map"
 
 export default function ProjectDetails({ params }: { params: { id: string } }) {
   const project = projects.find((p) => p.id === params.id)
@@ -45,6 +46,7 @@ export default function ProjectDetails({ params }: { params: { id: string } }) {
                 priority
               />
           </div>
+
           <div className="md:w-2/3">
             <h1 className="text-2xl md:text-3xl font-bold mb-2">{project.title}</h1>
             <p className="text-muted-foreground flex items-center gap-1 mb-4">
@@ -102,7 +104,7 @@ export default function ProjectDetails({ params }: { params: { id: string } }) {
                     }
 
                     return (
-                      <div key={amenity} className="flex w-xs items-center gap-2 p-3 border rounded-lg">
+                      <div key={amenity} className="flex w-auto lg:w-xs items-center gap-2 p-3 border rounded-lg">
                         <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
                           <Icon className="h-5 w-5" />
                         </div>
@@ -113,6 +115,10 @@ export default function ProjectDetails({ params }: { params: { id: string } }) {
               }
             </section>
             </div>
+          </section >
+
+          <section className="mt-3 w-full h-[500px] lg:h-[700px] rounded-md overflow-hidden">
+            <PropertyMap lat={project.latitude} lng={project.longitude} zoom={15} showPlaces={false} />
           </section>
         </main>
       </div>
