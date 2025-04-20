@@ -35,6 +35,26 @@ export default function ProjectDetails({ params }: { params: Promise<{ id: strin
 
   if (!project) return <h1>sorry</h1>
 
+  const GoBackLink = ({ href }: { href: string }) => {
+    return (
+      <Link href={href} className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6">
+        <ArrowLeft className="h-4 w-4" />
+        Volver a la lista de proyectos
+      </Link>
+    )
+  }
+
+  const ProjectImage = ({ src } : { src: string}) => {
+    return (
+      <Image
+            src={src}
+            alt={project.title}
+            fill
+            className="object-cover object-center"
+            priority
+          />
+    )   
+  }
 
   return (
     <div>
@@ -44,23 +64,16 @@ export default function ProjectDetails({ params }: { params: Promise<{ id: strin
         </div>
       </PageHeader>
       <main className="container mx-auto px-4 py-8">
-        <Link href="/proyectos/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="h-4 w-4" />
-          Volver a la lista de proyectos
-        </Link>
+        <GoBackLink href="/proyectos" />
 
         <section className="md:flex gap-4">
+
           <div className="relative w-full md:w-1/3 h-[500px] rounded-lg overflow-hidden">
-              <Image
-                src={`/project-imgs${project.image}` }
-                alt={project.title}
-                fill
-                className="object-cover object-center"
-                priority
-              />
+            <ProjectImage src={`/project-imgs${project.image}`} />
           </div>
 
           <div className="md:w-2/3">
+
             <h1 className="text-2xl md:text-3xl font-bold mb-2">{project.title}</h1>
             <p className="text-muted-foreground flex items-center gap-1 mb-4">
                 <MapPin className="h-4 w-4" />
