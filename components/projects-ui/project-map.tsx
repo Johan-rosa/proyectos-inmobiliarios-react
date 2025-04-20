@@ -53,8 +53,10 @@ export default function PropertyMap({
           fullscreenControl: false,
         })
 
+        if (places)
+
         // Add property marker
-        const propertyMarker = new window.google.maps.Marker({
+        new window.google.maps.Marker({
           position: { lat, lng },
           map: mapInstance,
           icon: {
