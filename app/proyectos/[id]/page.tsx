@@ -2,6 +2,7 @@
 import {properties as projects} from "@/data/projects"
 import Link from "next/link"
 import Image from "next/image"
+import { cn } from "@/lib/utils"
 import { 
   ArrowLeft,
   MapPin,
@@ -17,23 +18,18 @@ import { Badge } from "@/components/ui/badge"
 import { PageHeader } from "@/components/app-header"
 // import PropertyMap from "@/components/projects-ui/project-map"
 import NearbyPlaces from "@/components/projects-ui/project-map-places"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { use, useState} from "react"
 import type { PlaceType } from "@/types"
-import { Search } from "lucide-react"
-
 
 export default function ProjectDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const project = projects.find((p) => p.id === id)
 
   const [placeType, setPlaceType] = useState<PlaceType>("restaurant")
-  const [searchRadius, setSearchRadius] = useState<number>(1000) // 1km default
-  const [searchKeyword, setSearchKeyword] = useState<string>("")
+  const [searchRadius, setSearchRadius] = useState<number>(500)
 
-  if (!project) return <h1>sorry</h1>
+  if (!project) return <h1>Sorry</h1>
 
   const GoBackLink = ({ href }: { href: string }) => {
     return (
@@ -44,7 +40,7 @@ export default function ProjectDetails({ params }: { params: Promise<{ id: strin
     )
   }
 
-  const ProjectImage = ({ src } : { src: string}) => {
+  const ProjectImage = ({ src } : { src: string }) => {
     return (
       <Image
             src={src}
@@ -54,6 +50,71 @@ export default function ProjectDetails({ params }: { params: Promise<{ id: strin
             priority
           />
     )   
+  }
+
+  const ProjectCondition = ({ condition }: {condition: string}) => {
+    return(
+      <div className="flex items-center gap-1">
+        {condition === "Listo" ? (
+          <>
+            <CheckCircle className="h-5 w-5 text-emerald-600" />
+            <span className="text-emerald-600">Listo para entrega</span>
+          </>
+        ) : (
+          <>
+            <Clock className="h-5 w-5 text-amber-600" />
+            <span className="text-amber-600">En Construcción</span>
+          </>
+        )}
+    </div>
+    )
+  }
+
+  interface AmenityListProps {
+    amenities: string[]
+    className?: string
+    itemClassName?: string
+  }
+  
+  const AmenityList = ({ amenities, className, itemClassName }: AmenityListProps) => {
+    return (
+      <section className={cn("flex flex-wrap gap-3", className)}>
+        {amenities.map((amenity) => {
+          let Icon
+          const amenityLower = amenity.toLowerCase()
+  
+          if (amenityLower.includes("gimnasio")) {
+            Icon = Dumbbell
+          } else if (amenityLower.includes("piscina")) {
+            Icon = Pool
+          } else if (
+            amenityLower.includes("social") ||
+            amenityLower.includes("comunidad") ||
+            amenityLower.includes("eventos") ||
+            amenityLower.includes("lounge")
+          ) {
+            Icon = Users
+          } else {
+            Icon = Building
+          }
+  
+          return (
+            <div
+              key={amenity}
+              className={cn(
+                "flex items-center gap-2 p-3 border rounded-lg",
+                itemClassName
+              )}
+            >
+              <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                <Icon className="h-5 w-5" />
+              </div>
+              <span>{amenity}</span>
+            </div>
+          )
+        })}
+      </section>
+    )
   }
 
   return (
@@ -90,19 +151,9 @@ export default function ProjectDetails({ params }: { params: Promise<{ id: strin
                 <span>Entrega: {project.anioEntrega}</span>
               </div>
 
-              <div className="flex items-center gap-1">
-                {project.condicion === "Listo" ? (
-                  <>
-                    <CheckCircle className="h-5 w-5 text-emerald-600" />
-                    <span className="text-emerald-600">Listo para entrega</span>
-                  </>
-                ) : (
-                  <>
-                    <Clock className="h-5 w-5 text-amber-600" />
-                    <span className="text-amber-600">En Construcción</span>
-                  </>
-                )}
-              </div>
+              <ProjectCondition condition={project.condicion || ""}/>
+
+
             </div>  
             
             <div className="mb-8">
@@ -110,103 +161,55 @@ export default function ProjectDetails({ params }: { params: Promise<{ id: strin
               <p className="text-muted-foreground">{project.description}</p>
             </div>
 
-            <section className="flex flex-wrap gap-3">
-              {project.amenities?.map((amenity) => {
-                    let Icon
-                    const amenityLower = amenity.toLowerCase()
-                    if (amenityLower.includes("gimnasio")) {
-                      Icon = Dumbbell
-                    } else if (amenityLower.includes("piscina")) {
-                      Icon = Pool
-                    } else if (
-                      amenityLower.includes("social") ||
-                      amenityLower.includes("comunidad") ||
-                      amenityLower.includes("eventos") ||
-                      amenityLower.includes("lounge")
-                    ) {
-                      Icon = Users
-                    } else {
-                      Icon = Building
-                    }
-
-                    return (
-                      <div key={amenity} className="flex w-auto lg:w-xs items-center gap-2 p-3 border rounded-lg">
-                        <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                          <Icon className="h-5 w-5" />
-                        </div>
-                        <span>{amenity}</span>
-                      </div>
-                    )
-                  })
-              }
-            </section>
+            <AmenityList amenities={project.amenities || [""]} />
             </div>
           </section >
 
           <section className="mt-3 w-full h-[500px] lg:h-[700px] rounded-md overflow-hidden">
             <div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-2 w-full">
                   <label htmlFor="place-type" className="text-sm font-medium">
                     Tipo de Lugar
                   </label>
-                  <Select value={placeType} onValueChange={(value) => setPlaceType(value as PlaceType)}>
-                    <SelectTrigger id="place-type">
+                  <Select 
+                    value={placeType} 
+                    onValueChange={(value) => setPlaceType(value as PlaceType)}
+                  >
+                    <SelectTrigger id="place-type" className="w-full md:w-auto">
                       <SelectValue placeholder="Seleccionar tipo" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="restaurant">Restaurantes</SelectItem>
                       <SelectItem value="supermarket">Supermercados</SelectItem>
-                      <SelectItem value="school">Escuelas</SelectItem>
-                      <SelectItem value="park">Parques</SelectItem>
                       <SelectItem value="shopping_mall">Centros Comerciales</SelectItem>
                       <SelectItem value="hospital">Hospitales</SelectItem>
                       <SelectItem value="gym">Gimnasios</SelectItem>
-                      <SelectItem value="transit_station">Estaciones de Transporte</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="flex flex-col space-y-2">
                   <label htmlFor="search-radius" className="text-sm font-medium">
-                    Radio de Búsqueda (metros)
+                    Radio de Búsquedas
                   </label>
                   <Select
                     value={searchRadius.toString()}
                     onValueChange={(value) => setSearchRadius(Number.parseInt(value))}
                   >
-                    <SelectTrigger id="search-radius">
+                    <SelectTrigger id="search-radius" className="w-full md:w-auto">
                       <SelectValue placeholder="Seleccionar radio" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="500">500m</SelectItem>
                       <SelectItem value="1000">1km</SelectItem>
                       <SelectItem value="2000">2km</SelectItem>
-                      <SelectItem value="5000">5km</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-
-                <div className="flex flex-col space-y-2">
-                  <label htmlFor="keyword" className="text-sm font-medium">
-                    Palabra Clave (opcional)
-                  </label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="keyword"
-                      placeholder="ej., orgánico, café, etc."
-                      value={searchKeyword}
-                      onChange={(e) => setSearchKeyword(e.target.value)}
-                    />
-                    <Button variant="outline" size="icon">
-                      <Search className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
               </div>
             </div>
-            { /* <PropertyMap lat={project.latitude} lng={project.longitude} zoom={15} showPlaces={false} /> */}
-            <NearbyPlaces lat={project.latitude} lng={project.longitude} placeType="restaurant" radius={500} />
+            <NearbyPlaces lat={project.latitude} lng={project.longitude} placeType={placeType} radius={searchRadius} />
           </section>
         </main>
       </div>
