@@ -36,3 +36,13 @@ export interface Payment {
   ordinary: number
   extra: number
 }
+
+export type PlaceType =
+  | "restaurant"
+  | "supermarket"
+  | "school"
+  | "park"
+  | "shopping_mall"
+  | "hospital"
+  | "gym"
+  | "transit_station"
